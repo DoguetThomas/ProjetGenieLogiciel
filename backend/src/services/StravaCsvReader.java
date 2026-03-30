@@ -1,7 +1,5 @@
 package services;
 
-import services.StravaRecord;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,7 +15,7 @@ public class StravaCsvReader {
         /*liste de ligne CSV*/
         List<StravaRecord> records = new ArrayList<>();
         /*une ligne*/
-        String line = "";
+        String line;
         /*Séparateur*/
         String cvsSplitBy = ",";
 
@@ -39,22 +37,21 @@ public class StravaCsvReader {
                 StravaRecord record = new StravaRecord();
 
                 //utilisation de parseDoubleOrNull pour gérer les cases vides (sera un double ou null)
-                record.airPower = parseDoubleOrNull(data[0]);
-                record.formPower = parseDoubleOrNull(data[1]);
-                record.groundTime = parseDoubleOrNull(data[2]);
-                record.legSpringStiffness = parseDoubleOrNull(data[3]);
-                record.power = parseDoubleOrNull(data[4]);
-                record.verticalOscillation = parseDoubleOrNull(data[5]);
-                record.cadence = parseDoubleOrNull(data[6]);
-                record.datafile = data[7];
-                record.distance = parseDoubleOrNull(data[8]);
-                record.enhancedAltitude = parseDoubleOrNull(data[9]);
-                record.enhancedSpeed = parseDoubleOrNull(data[10]);
-                record.heartRate = parseDoubleOrNull(data[11]);
-                record.positionLat = parseDoubleOrNull(data[12]);
-                record.positionLong = parseDoubleOrNull(data[13]);
-
-                record.timestamp = LocalDateTime.parse(data[14], formatter);
+                record.setAirPower(parseDoubleOrNull(data[0]));
+                record.setFormPower(parseDoubleOrNull(data[1]));
+                record.setGroundTime(parseDoubleOrNull(data[2]));
+                record.setLegSpringStiffness(parseDoubleOrNull(data[3]));
+                record.setPower(parseDoubleOrNull(data[4]));
+                record.setVerticalOscillation(parseDoubleOrNull(data[5]));
+                record.setCadence(parseDoubleOrNull(data[6]));
+                record.setDatafile(data[7]); // String, pas besoin de parseDouble
+                record.setDistance(parseDoubleOrNull(data[8]));
+                record.setEnhancedAltitude(parseDoubleOrNull(data[9]));
+                record.setEnhancedSpeed(parseDoubleOrNull(data[10]));
+                record.setHeartRate(parseDoubleOrNull(data[11]));
+                record.setPositionLat(parseDoubleOrNull(data[12]));
+                record.setPositionLong(parseDoubleOrNull(data[13]));
+                record.setTimestamp(LocalDateTime.parse(data[14], formatter));
 
                 records.add(record);
             }

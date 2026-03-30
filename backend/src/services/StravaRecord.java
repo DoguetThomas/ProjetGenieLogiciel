@@ -86,4 +86,64 @@ public class StravaRecord {
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
+
+    public void setAirPower(Double airPower) {
+        this.airPower = airPower;
+    }
+
+    public void setFormPower(Double formPower) {
+        this.formPower = formPower;
+    }
+
+    public void setGroundTime(Double groundTime) {
+        this.groundTime = groundTime;
+    }
+
+    public void setLegSpringStiffness(Double legSpringStiffness) {
+        this.legSpringStiffness = legSpringStiffness;
+    }
+
+    public void setPower(Double power) {
+        this.power = power;
+    }
+
+    public void setVerticalOscillation(Double verticalOscillation) {
+        this.verticalOscillation = verticalOscillation;
+    }
+
+    public void setCadence(Double cadence) {
+        this.cadence = cadence;
+    }
+
+    public void setDatafile(String datafile) {
+        this.datafile = datafile;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
+    }
+
+    public void setEnhancedAltitude(Double enhancedAltitude) {
+        this.enhancedAltitude = enhancedAltitude;
+    }
+
+    public void setEnhancedSpeed(Double enhancedSpeed) {
+        this.enhancedSpeed = enhancedSpeed;
+    }
+
+    public void setHeartRate(Double heartRate) {
+        this.heartRate = heartRate;
+    }
+
+    public void setPositionLat(Double positionLat) {
+        this.positionLat = positionLat;
+    }
+
+    public void setPositionLong(Double positionLong) {
+        this.positionLong = positionLong;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
 }
