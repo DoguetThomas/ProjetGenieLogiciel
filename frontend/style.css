@@ -1,0 +1,407 @@
+:root {
+  --bg: #111111;
+  --panel: #1a1a1a;
+  --text: #f5f5f5;
+  --muted: #b0b0b0;
+  --border: #2a2a2a;
+  --strava: #fc4c02;
+  --run: #fc4c02;
+  --bike: #2f2f2f;
+  --graphic-height: 320px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, Arial, sans-serif;
+}
+
+.app-shell {
+  width: min(1280px, 96%);
+  margin: 1rem auto 2rem;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  background: #181818;
+  border: 1px solid #2a2a2a;
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.7rem;
+  color: #ffffff;
+}
+
+.app-header p {
+  margin: 0.3rem 0 0;
+  color: #b0b0b0;
+}
+
+.status-message {
+  min-height: 1.1rem;
+  font-size: 0.84rem;
+}
+
+.status-message.error {
+  color: #ff8d8d;
+}
+
+.status-message.success {
+  color: #9ce5b5;
+}
+
+.sport-badge {
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.sport-badge.run {
+  background: var(--strava);
+}
+
+.sport-badge.bike {
+  background: #3a3a3a;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.profile-settings-btn {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #242424;
+  color: var(--text);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.profile-settings-btn:hover {
+  border-color: var(--strava);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1rem;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+.panel h2 {
+  margin: 0 0 0.9rem;
+  font-size: 1.08rem;
+  color: #f5f5f5;
+}
+
+.panel-list {
+  grid-row: span 4;
+}
+
+.panel-summary,
+.panel-splits,
+.panel-map,
+.panel-chart,
+.panel-zones {
+  min-width: 0;
+}
+
+.panel-map,
+.panel-chart {
+  display: flex;
+  flex-direction: column;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.controls label {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.controls select {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.55rem;
+  font-size: 0.95rem;
+  background: #242424;
+  color: #f5f5f5;
+}
+
+.controls select:focus {
+  outline: none;
+  border-color: var(--strava);
+  box-shadow: 0 0 0 3px rgba(252, 76, 2, 0.15);
+}
+
+.activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 76vh;
+  overflow: auto;
+}
+
+.activity-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem;
+  margin-bottom: 0.55rem;
+  cursor: pointer;
+  background: #1f1f1f;
+}
+
+.activity-item.active {
+  border-color: var(--strava);
+  background: rgba(252, 76, 2, 0.16);
+}
+
+.activity-item .title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.activity-item .meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.65rem;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.7rem;
+  background: #202020;
+}
+
+.card .value {
+  color: #f5f5f5;
+}
+
+.card .label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-bottom: 0.2rem;
+}
+
+.card .value {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.splits-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.splits-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.splits-table th,
+.splits-table td {
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid #2e2e2e;
+  text-align: left;
+}
+
+.splits-table thead th {
+  color: #fc4c02;
+  font-weight: 700;
+}
+
+.splits-table tbody tr:hover {
+  background: rgba(252, 76, 2, 0.08);
+}
+
+#route-map {
+  width: 100%;
+  height: var(--graphic-height);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #2b2b2b;
+}
+
+.panel-chart canvas {
+  width: 100% !important;
+  height: var(--graphic-height) !important;
+  display: block;
+}
+
+#hr-zones {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(90px, 1fr));
+  gap: 0.5rem;
+}
+
+#hr-zones-chart {
+  width: 100% !important;
+  height: var(--graphic-height) !important;
+  display: block;
+}
+
+.zone {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.45rem;
+  text-align: center;
+}
+
+.zone .zname {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.zone .zvalue {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.zone.z1 {
+  background: #f3f4f6;
+}
+
+.zone.z2 {
+  background: #e0ecff;
+}
+
+.zone.z3 {
+  background: #e7f8ee;
+}
+
+.zone.z4 {
+  background: #fff5d7;
+}
+
+.zone.z5 {
+  background: #ffe3e3;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.modal-card {
+  width: min(420px, 100%);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.modal-card h2 {
+  margin: 0 0 0.8rem;
+  font-size: 1.05rem;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.profile-form label {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.profile-form input {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.55rem;
+  font-size: 0.95rem;
+  background: #242424;
+  color: #f5f5f5;
+}
+
+.modal-actions {
+  margin-top: 0.9rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  border-color: var(--strava);
+  background: var(--strava);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #242424;
+  color: var(--text);
+}
+
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-list {
+    grid-row: auto;
+  }
+
+  .activity-list {
+    max-height: 240px;
+  }
+
+  #hr-zones {
+    grid-template-columns: repeat(3, minmax(90px, 1fr));
+  }
+}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Running and Riding Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+</head>
+
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>Running and Riding Dashboard</h1>
+        <p id="status-message" class="status-message"></p>
+      </div>
+      <div class="header-actions">
+        <button id="profile-settings-btn" class="profile-settings-btn" type="button">Profile Settings</button>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="panel panel-list">
+        <h2>Activities</h2>
+        <div class="controls">
+          <label for="activity-select">Choose activity</label>
+          <select id="activity-select"></select>
+        </div>
+        <ul id="activity-list" class="activity-list"></ul>
+      </section>
+
+      <section class="panel panel-summary">
+        <h2>Summary</h2>
+        <div id="summary-cards" class="summary-cards"></div>
+      </section>
+
+      <section class="panel panel-splits">
+        <h2>Kilometer Splits</h2>
+        <div class="splits-table-wrap">
+          <table class="splits-table">
+            <thead>
+              <tr>
+                <th>KM</th>
+                <th>Split Time</th>
+                <th>Avg HR</th>
+                <th>Trend</th>
+              </tr>
+            </thead>
+            <tbody id="km-splits-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel panel-map">
+        <h2>Route</h2>
+        <div id="route-map"></div>
+      </section>
+
+      <section class="panel panel-chart">
+        <h2>Heart Rate</h2>
+        <canvas id="hr-chart"></canvas>
+      </section>
+
+      <section id="power-chart-panel" class="panel panel-chart">
+        <h2>Power</h2>
+        <canvas id="power-chart"></canvas>
+      </section>
+
+      <section class="panel panel-chart">
+        <h2>Altitude</h2>
+        <canvas id="altitude-chart"></canvas>
+      </section>
+
+      <section id="cadence-chart-panel" class="panel panel-chart">
+        <h2>Cadence</h2>
+        <canvas id="cadence-chart"></canvas>
+      </section>
+
+      <section id="ground-time-chart-panel" class="panel panel-chart">
+        <h2>Ground Time</h2>
+        <canvas id="ground-time-chart"></canvas>
+      </section>
+
+      <section class="panel panel-zones">
+        <h2>HR Zones (Z1-Z5)</h2>
+        <canvas id="hr-zones-chart"></canvas>
+      </section>
+    </main>
+  </div>
+
+  <div id="profile-modal" class="modal-overlay is-hidden" role="dialog" aria-modal="true"
+    aria-labelledby="profile-modal-title">
+    <div class="modal-card">
+      <h2 id="profile-modal-title">User Profile</h2>
+      <form id="profile-form" class="profile-form">
+        <label for="profile-gender">Gender</label>
+        <select id="profile-gender" name="gender" required>
+          <option value="">-- Select --</option>
+          <option value="MALE">Male</option>
+          <option value="FEMALE">Female</option>
+        </select>
+
+        <label for="profile-age">Age (years)</label>
+        <input id="profile-age" name="age" type="number" min="1" max="150" step="1" required />
+
+        <label for="profile-weight">Weight (kg)</label>
+        <input id="profile-weight" name="weight" type="number" min="1" step="0.1" required />
+
+        <label for="profile-height">Height (cm)</label>
+        <input id="profile-height" name="height" type="number" min="1" step="0.1" required />
+
+        <div class="modal-actions">
+          <button id="profile-cancel-btn" type="button" class="btn-secondary">Cancel</button>
+          <button id="profile-save-btn" type="submit" class="btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="app.js?v=20260329-1650"></script>
+</body>
+
+</html>

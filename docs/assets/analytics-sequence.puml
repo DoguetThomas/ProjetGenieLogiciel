@@ -1,0 +1,51 @@
+@startuml
+hide footbox
+
+actor User as U
+participant "Frontend\n(index.html + app.js)" as FE
+participant "Java HttpServer\nApplication" as API
+participant "ActivitiesController\n(Couche Controller)" as C
+participant "AnalyticsService\n(Couche Service)" as S
+
+== 1) Initialisation du tableau de bord ==
+U -> FE: Ouvrir la page du tableau de bord
+FE -> API: GET /api/activities/all
+API -> C: Requête routée
+C -> S: getAllActivities()
+note right of S
+	À implémenter :
+	validation des données profil,
+	logique métier et persistance.
+end note
+S --> C: AllActivitiesDto
+C --> API: Réponse JSON
+API --> FE: 200 + liste des activités
+FE --> U: Remplir le sélecteur + la liste des activités
+
+== 2) L'utilisateur sélectionne une activité ==
+U -> FE: Sélectionner l'id de l'activité
+
+FE -> API: GET /api/activities/{id}/summary
+API -> C: Requête routée
+C -> S: getSummary(id)
+S --> C: SummaryDto
+C --> API: Réponse JSON
+API --> FE: 200 + résumé
+
+FE -> API: GET /api/activities/{id}/metrics/route
+API -> C: Requête routée
+C -> S: getRoute(id)
+S --> C: RouteDto
+C --> API: Réponse JSON
+API --> FE: 200 + points de trace
+
+FE -> API: GET /api/activities/{id}/metrics/{type}
+API -> C: Requête routée
+C -> S: getMetrics<Type>(id)
+S --> C: MetricDto / PaceDto / ZoneDto
+C --> API: Réponse JSON
+API --> FE: 200 + payload des métriques
+
+FE --> U: Afficher cartes, graphiques et polyligne de la carte
+
+@enduml

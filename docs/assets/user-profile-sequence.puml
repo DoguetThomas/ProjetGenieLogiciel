@@ -1,0 +1,30 @@
+@startuml
+hide footbox
+
+actor User as U
+participant "Frontend\n(index.html + app.js)" as FE
+participant "Java HttpServer\nApplication" as API
+participant "UserProfileController\n(Couche Controller)" as C
+participant "UserProfileService\n(Couche Service)" as S
+
+== 1) Mise à jour du profil utilisateur ==
+U -> FE: Ouvrir la fenêtre profil
+U -> FE: Soumettre âge/poids/taille
+
+FE -> API: POST /api/user-profile\n{age, weight, height}
+API -> C: Requête routée
+C -> S: setUserProfile(UserProfileDto)
+note right of S
+	À implémenter :
+	validation des données profil,
+	logique métier et persistance.
+end note
+S --> C: void (sauvegarde)
+C --> API: JSON de succès
+API --> FE: 200 + JSON de succès
+FE --> U: Fermer la fenêtre + afficher le statut de succès
+FE -> API: GET /api/activities/{id}/metrics/zone
+API --> FE: 200 + zones mises à jour
+FE --> U: Rafraîchir le graphique des zones
+
+@enduml

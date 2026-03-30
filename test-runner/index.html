@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digisport Black Box API Test Runner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+    <div class="app-shell">
+        <header class="top-bar">
+            <div>
+                <h1>Test Runner</h1>
+                <p>Runs hidden API contract checks against your backend.</p>
+            </div>
+            <div class="base-url">
+                <label for="api-base">API base URL</label>
+                <input id="api-base" type="text" value="http://localhost:8090" spellcheck="false" />
+            </div>
+        </header>
+
+        <section class="toolbar">
+            <button id="run-btn" class="run-btn">Run Tests</button>
+            <div class="status-strip" id="status-strip" aria-live="polite"></div>
+        </section>
+
+        <section class="dashboard">
+            <article class="summary-card">
+                <h2>Summary</h2>
+                <dl>
+                    <div>
+                        <dt>Total</dt>
+                        <dd id="count-total">0</dd>
+                    </div>
+                    <div>
+                        <dt>Passed</dt>
+                        <dd id="count-passed">0</dd>
+                    </div>
+                    <div>
+                        <dt>Failed</dt>
+                        <dd id="count-failed">0</dd>
+                    </div>
+                    <div>
+                        <dt>Duration</dt>
+                        <dd id="duration-ms">0 ms</dd>
+                    </div>
+                </dl>
+            </article>
+
+            <article class="results-card">
+                <h2>Results</h2>
+                <ul id="results" class="results"></ul>
+            </article>
+        </section>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+
+</html>
