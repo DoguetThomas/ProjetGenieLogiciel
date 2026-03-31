@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class StravaAnalyticsServiceImpl implements AnalyticsService{
+
     @Override
     public AllActivitiesDto getAllActivities(){
         return null;
