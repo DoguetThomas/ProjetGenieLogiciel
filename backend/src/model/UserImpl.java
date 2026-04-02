@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserImpl implements UserModel{
 
     private int age;
@@ -7,6 +10,7 @@ public class UserImpl implements UserModel{
     private double height;
     private double weight;
     private double maxHRUser;
+    private ArrayList seuilZoneHR;
 
 
     public UserImpl(int age, boolean genre, double height, double weight) {
@@ -61,7 +65,6 @@ public class UserImpl implements UserModel{
      * Permet d'estimer le HRMax de l'User
      * @param age de l'utilisateur
      * @param genre de l'utilisateur true = Female et false = Homme
-     * @return maxHRUser
      */
     @Override
     public void setMaxHRUser(int age, boolean genre) {
@@ -84,6 +87,26 @@ public class UserImpl implements UserModel{
     @Override
     public double getMaxHRUser() {
         return maxHRUser;
+    }
+
+
+    /**
+     * Définit les 4 seuils de HR pour séparer les 5 zones de HR de Garmin en format liste
+     * @param maxHRUser de l'utilisateur //TODO
+     */
+    @Override
+    public void setSeuilZoneHR(double maxHRUser) {
+
+    }
+
+    /**
+     * Récupère les 4 seuils de HR pour séparer les 5 zones de HR de Garmin
+     * @return SeuilZoneHR //TODO
+     */
+    @Override
+    public ArrayList getSeuilZoneHR() {
+        seuilZoneHR = null;
+        return seuilZoneHR;
     }
 
 

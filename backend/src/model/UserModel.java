@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 public interface UserModel {
 
     /**
@@ -62,6 +64,22 @@ public interface UserModel {
      * @return le HRmax de l'utilisateur
      */
     public double getMaxHRUser();
+
+
+    /**
+     * Définit les 4 seuils de HR pour séparer les 5 zones de HR de Garmin en format liste
+     * @param maxHRUser de l'utilisateur
+     */
+    public void setSeuilZoneHR(double maxHRUser);
+
+    /**
+     * Récupère les 4 seuils de HR pour séparer les 5 zones de HR de Garmin
+     * @return
+     */
+
+    public ArrayList getSeuilZoneHR();
+
+
 
 
 }
