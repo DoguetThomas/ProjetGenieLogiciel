@@ -87,6 +87,7 @@ public class UserImpl implements UserModel{
                 ", genre=" + genre +
                 ", height=" + height +
                 ", weight=" + weight +
+                ", maxHRUser=" + maxHRUser +
                 '}';
     }
 }
