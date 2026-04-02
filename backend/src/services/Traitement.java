@@ -18,27 +18,39 @@ public class Traitement {
         this.user = user;
     }
 
+    /**
+     * Regroupe les enregistrements par activité
+     * Utilise l'attribut "datafile" comme identifiant pour associer
+     * chaque ligne à sa séance correspondante
+     * * @return Une map qui regroupe les données par séance
+     */
+
     private Map<String, List<StravaRecord>> RecordSorter(){
         Map<String, List<StravaRecord>> sortedMap = new HashMap<>();
 
+        // une condition qui s'assure que les données ont bien été chargées
         if (this.records == null) {
             return sortedMap;
         }
 
+        // crée une liste pour chaque activité
         for (StravaRecord record : this.records) {
             String activityId = record.getDatafile();
 
+            // ignore les enregistrements invalides
             if (activityId == null || activityId.isEmpty()) {
                 continue;
             }
 
+        // crée une nouvelle liste si c'est le tout premier enregistrement de cette activité
         if (!sortedMap.containsKey(activityId)) {
             sortedMap.put(activityId, new ArrayList<>());
         }
 
+        // ajout de l'enregistrement à la liste de son activité
         sortedMap.get(activityId).add(record);
         }
-
+        
         return sortedMap;
 
     }
