@@ -16,6 +16,7 @@ public class ActivityImpl implements ActivityModel{
     private int tz4;
     private int tz5;
 
+
     public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, int tz1, int tz2, int tz3, int tz4, int tz5) {
         this.id = id;
         this.distance = distance;

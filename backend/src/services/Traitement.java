@@ -91,8 +91,8 @@ public class Traitement {
             }
         }
         // Conversion de la distance em km
-        double Distancekm = maxDistance / 1000;
-        return Distancekm;
+        double distancekm = maxDistance / 1000;
+        return distancekm;
     }
 
     /**
@@ -141,32 +141,69 @@ public class Traitement {
         }
 
         // calcul de l'écart
-        long DurationSeconds = Duration.between(startTime, endTime).getSeconds();
+        long durationSeconds = Duration.between(startTime, endTime).getSeconds();
 
-        return (int) DurationSeconds;
+        return (int) durationSeconds;
     }
 
     /**
      * Calcule la vitesse moyenne en km/h d'une activité
-     * @param id L'identifiant de la séance
+     * @param id L'identifiant de l'activité
      * @return La vitesse moyenne en km/h : AvgSpeed
      */
     private Double getAvgSpeed(String id){
         // conversion du temps de secondes à heure
-        int DurationHour = this.getDuration(id) / 3600;
+        int durationHour = this.getDuration(id) / 3600;
         // calcul distance
-        double AvgSpeed = this.getDist(id) / DurationHour;
-        return AvgSpeed ;
+        double avgSpeed = this.getDist(id) / durationHour;
+        return avgSpeed ;
     }
-
 
 
     private Double getAvgPace(String id) {
         return null;
     }
 
+    /**
+     * Calcule la FC moyenne pour une activité
+     * @param id L'identifiant de l'activité
+     * @return La FC moyenne sous forme de double
+     */
     private Double getAvgHR(String id) {
-        return null;
+        if (this.sortedRecords == null) {
+            return 0.0;
+        }
+        // On récupère la liste des points Cardio pour l'activité ciblée par l'ID
+        List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
+
+        if (recordsForActivity.isEmpty ()) {
+            // On retourne 0.0 si la liste est vide
+            return 0.0;
+        }
+        // On crée une variable pour stocker la somme de toutes les FC et un compteur pour
+        // combien de points on additionne
+        double totalHR = 0.0 ;
+        int count = 0;
+
+        for (StravaRecord record : recordsForActivity) {
+            Double HR = record.getHeartRate();
+
+            // On vérifie qu'il existe bien une valeur de fréquence cardiaque pour chaque ligne
+            if (HR != null && HR > 0) {
+            totalHR += HR;
+            count++;
+            }
+
+
+        }
+        // Pour éviter la divison par 0
+        if (count==0){
+            return 0.0;
+        }
+
+        double avgHR = totalHR / count ;
+
+        return avgHR;
     }
 
     private Double getMaxHR(String id) {
