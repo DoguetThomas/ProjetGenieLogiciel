@@ -1,7 +1,9 @@
 package launch;
 
 import services.AnalyticsService;
+import services.StravaAnalyticsServiceImpl;
 import services.UserProfileService;
+import services.UserProfileServiceImpl;
 
 /**
  * This class is intended to hold the application configuration, such as debug mode.
@@ -18,9 +20,8 @@ public class ApplicationConfig {
     private UserProfileService userProfileService;
 
     private ApplicationConfig() {
-        /**
-         * Initialize the application configuration with default values. TODO
-         */
+        this.analyticsService = new StravaAnalyticsServiceImpl();
+        this.userProfileService = new UserProfileServiceImpl();
     }
 
     public static ApplicationConfig getConfiguration() {

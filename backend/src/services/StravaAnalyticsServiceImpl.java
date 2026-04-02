@@ -13,25 +13,25 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
 
     public StravaAnalyticsServiceImpl(){
         this.activities = new ArrayList<>();
-        ActivityModel activity1 = new ActivityImpl("1",2000,15,"BIKE",6000,80,147,200,45,1500,1500,2000,500,500);
-        ActivityModel activity2 = new ActivityImpl("2",2000,15,"RUN",6000,80,147,200,45,1500,1500,2000,500,500);
+        ActivityModel activity1 = new ActivityImpl("1",2000.0,15.0,"BIKE",6000,80.0,147.0,200.0,45.0,1500,1500,2000,500,500);
+        ActivityModel activity2 = new ActivityImpl("2",2000.0,15.0,"RUN",6000,80.0,147.0,200.0,45.0,1500,1500,2000,500,500);
         this.activities.add(activity1);
         this.activities.add(activity2);
     }
     @Override
     public AllActivitiesDto getAllActivities(){
-        List<ActivityDto> activitiesDto = new ArrayList<>();
+       /* List<ActivityDto> activitiesDto = new ArrayList<>();
         for (ActivityModel activity : this.activities){
             if (activity !=null ){
                 if (activity.getSport() == "BIKE"){
-                    ActivityTypeDto.RUN
                 }
                 else if (activity.getSport() == "RUN"){
 
                 }
-                ActivityDto activityDto = new ActivityDto(activity.getId(), activity.getDistance(), , activity.get);
+
             }
-        }
+        }*/
+        return null;
     }
 
     @Override

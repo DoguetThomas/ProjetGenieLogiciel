@@ -7,6 +7,12 @@ public class UserImpl implements UserModel{
     private double height;
     private double weight;
 
+    public UserImpl(int age, boolean genre, double height, double weight) {
+        this.age = age;
+        this.genre = genre;
+        this.height = height;
+        this.weight = weight;
+    }
 
     @Override
     public int getAge(int age) {

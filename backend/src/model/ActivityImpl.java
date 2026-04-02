@@ -5,18 +5,18 @@ public class ActivityImpl implements ActivityModel{
     private Double distance;
     private Double avgSpeed;
     private String sport;
-    private Double duration;
+    private int duration;
     private Double avgPower;
     private Double avgHR;
     private Double maxHR;
     private Double avgPace;
-    private Double tz1;
-    private Double tz2;
-    private Double tz3;
-    private Double tz4;
-    private Double tz5;
+    private int tz1;
+    private int tz2;
+    private int tz3;
+    private int tz4;
+    private int tz5;
 
-    public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, Double duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, Double tz1, Double tz2, Double tz3, Double tz4, Double tz5) {
+    public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, int tz1, int tz2, int tz3, int tz4, int tz5) {
         this.id = id;
         this.distance = distance;
         this.avgSpeed = avgSpeed;
