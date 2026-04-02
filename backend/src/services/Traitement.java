@@ -2,8 +2,12 @@ package services;
 
 import model.User;
 import model.Activity;
-import model.StravaRecord;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +78,7 @@ public class Traitement {
         // récupère toutes les lignes de la séance
         List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
 
-        Double maxDistance = 0.0;
+        double maxDistance = 0.0;
 
         // parcours toutes lignes pour trouver la distance la plus élevée
         for (StravaRecord record : recordsForActivity) {
@@ -89,8 +93,55 @@ public class Traitement {
         return maxDistance;
     }
 
+    /**
+     * Calcule la durée totale d'une activité en secondes
+     * Cherche le premier et le dernier instant enregistrés
+     * pour calculer le temps écoulé entre les deux
+     *
+     * @param id L'identifiant de la séance
+     * @return La durée totale en secondes (Double), ou 0.0 si introuvable
+     */
     private Double getDuration(String id){
-        return null;
+
+        if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
+            return 0.0;
+        }
+
+        List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
+
+        // si la liste est vide, retourne 0.0
+        if (recordsForActivity.isEmpty()) {
+            return 0.0;
+        }
+
+        LocalDateTime startTime = null;
+        LocalDateTime endTime = null;
+
+        // la boucle permet d'identifier le l'heure de départ et l'heure d'arrivée
+        for (StravaRecord record : recordsForActivity) {
+            LocalDateTime currentTime = record.getTimestamp();
+
+            if (currentTime != null) {
+                // si c'est le premier point lu ou s'il est plus ancien que startTime
+                if (startTime == null || currentTime.isBefore(startTime)) {
+                    startTime = currentTime;
+                }
+                // si c'est le premier point lu, ou s'il est plus récent que endTime
+                if (endTime == null || currentTime.isAfter(endTime)) {
+                    endTime = currentTime;
+                }
+            }
+        }
+
+        // au cas où aucune ligne n'avait d'heure valide
+        if (startTime == null || endTime == null) {
+            return 0.0;
+        }
+
+        // calcul de l'écart
+        long seconds = Duration.between(startTime, endTime).getSeconds();
+
+        return (double) seconds;
     }
 
     private Double getAvgSpeed(String id){
