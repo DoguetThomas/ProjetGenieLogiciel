@@ -50,4 +50,12 @@ public interface UserModel {
      */
     public void setWeight(double weight);
 
+    /**
+     * Définit le HRmax de l'utilisateur
+     * @param  age de l'utilisateur
+     * @param genre de l'utilisateur
+     * @return le HRmax de l'utilisateur
+     */
+    public double setMaxHRUser(int age, boolean genre);
+
 }
