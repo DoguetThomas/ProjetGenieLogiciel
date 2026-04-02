@@ -58,4 +58,6 @@ public interface UserModel {
      */
     public double setMaxHRUser(int age, boolean genre);
 
+
+
 }

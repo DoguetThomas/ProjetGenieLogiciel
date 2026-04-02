@@ -59,7 +59,7 @@ public class UserImpl implements UserModel{
     /**
      * Permet d'estimer le HRMax de l'User
      * @param age de l'utilisateur
-     * @param genre de l'utilisateur
+     * @param genre de l'utilisateur true = Female et false = Homme
      * @return maxHRUser
      */
     @Override
@@ -74,10 +74,8 @@ public class UserImpl implements UserModel{
         } else {
             maxHRUser = 220 - age;
         }
-
         //Pour les hommes : FCmax = 220 – âge
         //Pour les femmes : FCmax = 226 – âge
-        maxHRUser = 225; // factice pour l'instant
         return maxHRUser;
     }
 
