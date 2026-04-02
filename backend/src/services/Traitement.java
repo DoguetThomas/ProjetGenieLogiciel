@@ -89,8 +89,9 @@ public class Traitement {
                 maxDistance = currentDist;
             }
         }
-
-        return maxDistance;
+        // Conversion de la distance em km
+        double Distancekm = maxDistance/1000 ;
+        return Distancekm ;
     }
 
     /**
@@ -147,6 +148,7 @@ public class Traitement {
     private Double getAvgSpeed(String id){
         return null;
     }
+
 
     private Double getAvgPace(String id){
         return null;
