@@ -7,19 +7,19 @@ public interface ActivityModel {
      * * @return L'identifiant de l'activité sous forme de chaîne de caractères.
      */
 
-    public String getID(String id);
+    public String getId();
 
     /**
      * Définit l'identifiant unique de l'activité.
      * * @param ID Le nouvel identifiant de l'activité.
      */
-    public void setID(String id);
+    public void setId(String id);
 
     /**
      * Récupère la distance parcourue lors de l'activité.
      * * @return La distance de l'activité.
      */
-    public Double getDistance(Double id);
+    public Double getDistance();
 
     /**
      * Définit la distance parcourue lors de l'activité.
@@ -31,7 +31,7 @@ public interface ActivityModel {
      * Récupère la vitesse moyenne de l'activité.
      * * @return La vitesse moyenne.
      */
-    public Double getAvgSpeed(Double id);
+    public Double getAvgSpeed();
 
     /**
      * Définit la vitesse moyenne de l'activité.
@@ -43,7 +43,7 @@ public interface ActivityModel {
      * Récupère le type de sport pratiqué lors de l'activité.
      * * @return Le nom du sport.
      */
-    public String getSport(String id);
+    public String getSport();
 
     /**
      * Définit le type de sport pratiqué lors de l'activité.
@@ -79,7 +79,7 @@ public interface ActivityModel {
      * Récupère la fréquence cardiaque moyenne (Heart Rate) de l'activité.
      * * @return La fréquence cardiaque moyenne.
      */
-    public Double getAvgHR(Double AvgHR);
+    public Double getAvgHR();
 
     /**
      * Définit la fréquence cardiaque moyenne de l'activité.
@@ -91,7 +91,7 @@ public interface ActivityModel {
      * Récupère la fréquence cardiaque maximale atteinte pendant l'activité.
      * * @return La fréquence cardiaque maximale.
      */
-    public Double getMaxHR(Double maxHR);
+    public Double getMaxHR();
 
     /**
      * Définit la fréquence cardiaque maximale de l'activité.
@@ -115,61 +115,61 @@ public interface ActivityModel {
      * Récupère le temps passé dans la zone d'entraînement 1 (TZ1).
      * * @return Le temps en zone 1.
      */
-    public Double getTZ1(Double TZ1);
+    public Double getTz1();
 
     /**
      * Définit le temps passé dans la zone d'entraînement 1 (TZ1).
      * * @param TZ1 Le nouveau temps en zone 1.
      */
-    public void setTZ1(Double TZ1);
+    public void setTz1(Double tz1);
 
     /**
      * Récupère le temps passé dans la zone d'entraînement 2 (TZ2).
      * * @return Le temps en zone 2.
      */
-    public Double getTZ2(Double TZ2);
+    public Double getTz2();
 
     /**
      * Définit le temps passé dans la zone d'entraînement 2 (TZ2).
      * * @param TZ2 Le nouveau temps en zone 2.
      */
-    public void setTZ2(Double TZ2);
+    public void setTz2(Double tz2);
 
     /**
      * Récupère le temps passé dans la zone d'entraînement 3 (TZ3).
      * * @return Le temps en zone 3.
      */
-    public Double getTZ3(Double TZ3);
+    public Double getTz3();
 
     /**
      * Définit le temps passé dans la zone d'entraînement 3 (TZ3).
      * * @param TZ3 Le nouveau temps en zone 3.
      */
-    public void setTZ3(Double TZ3);
+    public void setTz3(Double tz3);
 
     /**
      * Récupère le temps passé dans la zone d'entraînement 4 (TZ4).
      * * @return Le temps en zone 4.
      */
-    public Double getTZ4(Double TZ4);
+    public Double getTz4();
 
     /**
      * Définit le temps passé dans la zone d'entraînement 4 (TZ4).
      * * @param TZ4 Le nouveau temps en zone 4.
      */
-    public void setTZ4(Double TZ4);
+    public void setTz4(Double tz4);
 
     /**
      * Récupère le temps passé dans la zone d'entraînement 5 (TZ5).
      * * @return Le temps en zone 5.
      */
-    public Double getTZ5(Double TZ5);
+    public Double getTz5();
 
     /**
      * Définit le temps passé dans la zone d'entraînement 5 (TZ5).
      * * @param TZ5 Le nouveau temps en zone 5.
      */
-    public void setTZ5(Double TZ5);
+    public void setTz5(Double tz5);
 
 
 }

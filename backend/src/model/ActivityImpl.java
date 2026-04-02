@@ -1,37 +1,54 @@
 package model;
 
 public class ActivityImpl implements ActivityModel{
-    private String ID;
+    private String id;
     private Double distance;
     private Double avgSpeed;
     private String sport;
-    private Double Duration;
+    private Double duration;
     private Double avgPower;
     private Double avgHR;
     private Double maxHR;
     private Double avgPace;
-    private Double TZ1;
-    private Double TZ2;
-    private Double TZ3;
-    private Double TZ4;
-    private Double TZ5;
+    private Double tz1;
+    private Double tz2;
+    private Double tz3;
+    private Double tz4;
+    private Double tz5;
+
+    public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, Double duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, Double tz1, Double tz2, Double tz3, Double tz4, Double tz5) {
+        this.id = id;
+        this.distance = distance;
+        this.avgSpeed = avgSpeed;
+        this.sport = sport;
+        this.duration = duration;
+        this.avgPower = avgPower;
+        this.avgHR = avgHR;
+        this.maxHR = maxHR;
+        this.avgPace = avgPace;
+        this.tz1 = tz1;
+        this.tz2 = tz2;
+        this.tz3 = tz3;
+        this.tz4 = tz4;
+        this.tz5 = tz5;
+    }
 
 
     @Override
-    public String getID(String id) {
+    public String getId() {
         return "";
     }
 
-
     @Override
-    public void setID(String id) {
+    public void setId(String id) {
 
     }
 
     @Override
-    public Double getDistance(Double id) {
+    public Double getDistance() {
         return 0.0;
     }
+
 
     @Override
     public void setDistance(Double distance) {
@@ -39,9 +56,10 @@ public class ActivityImpl implements ActivityModel{
     }
 
     @Override
-    public Double getAvgSpeed(Double id) {
+    public Double getAvgSpeed() {
         return 0.0;
     }
+
 
     @Override
     public void setAvgSpeed(Double avgSpeed) {
@@ -49,9 +67,10 @@ public class ActivityImpl implements ActivityModel{
     }
 
     @Override
-    public String getSport(String id) {
+    public String getSport() {
         return "";
     }
+
 
     @Override
     public void setSport(String sport) {
@@ -79,9 +98,10 @@ public class ActivityImpl implements ActivityModel{
     }
 
     @Override
-    public Double getAvgHR(Double AvgHR) {
+    public Double getAvgHR() {
         return 0.0;
     }
+
 
     @Override
     public void setAvgHR(Double avgHR) {
@@ -89,9 +109,10 @@ public class ActivityImpl implements ActivityModel{
     }
 
     @Override
-    public Double getMaxHR(Double maxHR) {
+    public Double getMaxHR() {
         return 0.0;
     }
+
 
     @Override
     public void setMaxHR(Double maxHR) {
@@ -109,72 +130,77 @@ public class ActivityImpl implements ActivityModel{
     }
 
     @Override
-    public Double getTZ1(Double TZ1) {
+    public Double getTz1() {
         return 0.0;
     }
 
+
     @Override
-    public void setTZ1(Double TZ1) {
+    public void setTz1(Double tz1) {
 
     }
 
     @Override
-    public Double getTZ2(Double TZ2) {
+    public Double getTz2() {
         return 0.0;
     }
 
+
     @Override
-    public void setTZ2(Double TZ2) {
+    public void setTz2(Double tz2) {
 
     }
 
     @Override
-    public Double getTZ3(Double TZ3) {
+    public Double getTz3() {
         return 0.0;
     }
 
+
     @Override
-    public void setTZ3(Double TZ3) {
+    public void setTz3(Double tz3) {
 
     }
 
     @Override
-    public Double getTZ4(Double TZ4) {
+    public Double getTz4() {
         return 0.0;
     }
 
+
     @Override
-    public void setTZ4(Double TZ4) {
+    public void setTz4(Double tz4) {
 
     }
 
     @Override
-    public Double getTZ5(Double TZ5) {
+    public Double getTz5() {
         return 0.0;
     }
 
+
     @Override
-    public void setTZ5(Double TZ5) {
+    public void setTz5(Double tz5) {
 
     }
 
     @Override
     public String toString() {
         return "ActivityImpl{" +
-                "ID='" + ID + '\'' +
+                "ID='" + id + '\'' +
                 ", distance=" + distance +
                 ", avgSpeed=" + avgSpeed +
                 ", sport='" + sport + '\'' +
-                ", Duration=" + Duration +
+                ", Duration=" + duration +
                 ", avgPower=" + avgPower +
                 ", avgHR=" + avgHR +
                 ", maxHR=" + maxHR +
                 ", avgPace=" + avgPace +
-                ", TZ1=" + TZ1 +
-                ", TZ2=" + TZ2 +
-                ", TZ3=" + TZ3 +
-                ", TZ4=" + TZ4 +
-                ", TZ5=" + TZ5 +
+                ", TZ1=" + tz1 +
+                ", TZ2=" + tz2 +
+                ", TZ3=" + tz3 +
+                ", TZ4=" + tz4 +
+                ", TZ5=" + tz5 +
                 '}';
     }
 }

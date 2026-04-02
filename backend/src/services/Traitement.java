@@ -1,7 +1,8 @@
 package services;
 
-import model.User;
-import model.Activity;
+import model.StravaRecord;
+import model.UserModel;
+import model.ActivityModel;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -12,11 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Traitement {
-    private List<services.StravaRecord> records;
+    private List<StravaRecord> records;
     private Map<String, List<StravaRecord>> sortedRecords;
-    private User user;
+    private UserModel user;
 
-    public Traitement(String filePath, User user){
+    public Traitement(String filePath, UserModel user) {
         this.records = StravaCsvReader.readCsv(filePath);
         this.sortedRecords = this.RecordSorter();
         this.user = user;
@@ -28,7 +29,7 @@ public class Traitement {
      * chaque ligne à sa séance correspondante
      * * @return Une map qui regroupe les données par séance
      */
-    private Map<String, List<StravaRecord>> RecordSorter(){
+    private Map<String, List<StravaRecord>> RecordSorter() {
         Map<String, List<StravaRecord>> sortedMap = new HashMap<>();
 
         // une condition qui s'assure que les données ont bien été chargées
@@ -45,19 +46,19 @@ public class Traitement {
                 continue;
             }
 
-        // crée une nouvelle liste si c'est le tout premier enregistrement de cette activité
-        if (!sortedMap.containsKey(activityId)) {
-            sortedMap.put(activityId, new ArrayList<>());
-        }
+            // crée une nouvelle liste si c'est le tout premier enregistrement de cette activité
+            if (!sortedMap.containsKey(activityId)) {
+                sortedMap.put(activityId, new ArrayList<>());
+            }
 
-        // ajout de l'enregistrement à la liste de son activité
-        sortedMap.get(activityId).add(record);
+            // ajout de l'enregistrement à la liste de son activité
+            sortedMap.get(activityId).add(record);
         }
 
         return sortedMap;
     }
 
-    private String determineSportType(String id){
+    private String determineSportType(String id) {
         return null;
     }
 
@@ -90,8 +91,8 @@ public class Traitement {
             }
         }
         // Conversion de la distance em km
-        double Distancekm = maxDistance/1000 ;
-        return Distancekm ;
+        double Distancekm = maxDistance / 1000;
+        return Distancekm;
     }
 
     /**
@@ -102,7 +103,7 @@ public class Traitement {
      * @param id L'identifiant de la séance
      * @return La durée totale en secondes (Double), ou 0.0 si introuvable
      */
-    private Integer getDuration(String id){
+    private Integer getDuration(String id) {
 
         if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
             return 0;
@@ -145,27 +146,28 @@ public class Traitement {
         return (int) DurationSeconds;
     }
 
-    private Double getAvgSpeed(String id){
+    private Double getAvgSpeed(String id) {
 
-        this.getDuration(DurationSeconds)
-        double AvgSpeed = DistanceKm /
-        return AvgSpeed ;
-    }
-
-
-    private Double getAvgPace(String id){
+        //this.getDuration(DurationSeconds)
+        //double AvgSpeed = DistanceKm /
+        //return AvgSpeed;
         return null;
     }
 
-    private Double getAvgHR(String id){
+
+    private Double getAvgPace(String id) {
         return null;
     }
 
-    private Double getMaxHR(String id){
+    private Double getAvgHR(String id) {
         return null;
     }
 
-    private Double getAvgPower(String id){
+    private Double getMaxHR(String id) {
+        return null;
+    }
+
+    private Double getAvgPower(String id) {
         return null;
     }
 
@@ -175,12 +177,14 @@ public class Traitement {
     }
      */
 
-    private Double[] calculateTimeInZones(){
+    private Double[] calculateTimeInZones() {
         return null;
     }
 
-    public List<Activity> getActivities(){
+    public List<ActivityModel> getActivities() {
         return null;
     }
+
+}
 
 
