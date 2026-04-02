@@ -231,8 +231,42 @@ public class Traitement {
         return maxHR;
     }
 
+    /**
+     * Calcule la puissance moyenne pour une activité
+     * @param id L'identifiant de l'activité
+     * @return La puissance moyenne sous forme de double
+     */
     private Double getAvgPower(String id) {
-        return null;
+        if (this.sortedRecords == null) {
+            return 0.0;
+        }
+        // On récupère la liste des points pour l'activité ciblée par l'ID
+        List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
+
+        if (recordsForActivity == null || recordsForActivity.isEmpty ()) {
+            // On retourne 0.0 si la liste est vide
+            return 0.0;
+        }
+        // On crée une variable pour stocker la somme de toutes les puissances et un compteur pour
+        // combien de points on additionne
+        double totalPower = 0.0 ;
+        int count = 0;
+
+        for (StravaRecord record : recordsForActivity) {
+            Double power = record.getPower();
+
+            // On vérifie qu'il existe bien une valeur de puissance pour chaque ligne
+            if (power != null ) {
+                totalPower += power;
+                count++;
+            }
+        }
+        // Pour éviter la divison par 0
+        if (count==0){
+            return 0.0;
+        }
+        double avgPower = totalPower / count ;
+        return avgPower;
     }
 
     /*il faut qu'on détermine comment représenter le Split
