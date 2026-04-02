@@ -193,21 +193,42 @@ public class Traitement {
             totalHR += HR;
             count++;
             }
-
-
         }
         // Pour éviter la divison par 0
         if (count==0){
             return 0.0;
         }
-
         double avgHR = totalHR / count ;
-
         return avgHR;
     }
-
+    /**
+     * Calcule la FC max pour une activité
+     * @param id L'identifiant de l'activité
+     * @return La FC max sous forme de double
+     */
     private Double getMaxHR(String id) {
-        return null;
+        if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
+            return 0.0;
+        }
+        List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
+        // On vérifie que la liste crée n'est pas vide et existe bien
+        if (recordsForActivity == null || recordsForActivity.isEmpty()) {
+            return 0.0;
+        }
+        //On initialise le max à 0
+        double maxHR = 0.0;
+
+        for (StravaRecord record : recordsForActivity) {
+            Double HR = record.getHeartRate();
+
+            // On regarde la FC à chaque ligne et si elle est supérieur à notre max actuel
+            if (HR != null && HR > maxHR) {
+                // Elle devient notre nouveau max
+                maxHR= HR;
+            }
+        }
+
+        return maxHR;
     }
 
     private Double getAvgPower(String id) {
