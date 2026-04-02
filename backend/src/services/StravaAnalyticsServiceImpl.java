@@ -20,22 +20,39 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
     }
     @Override
     public AllActivitiesDto getAllActivities(){
-       /* List<ActivityDto> activitiesDto = new ArrayList<>();
+        AllActivitiesDto allActivitiesDto = new AllActivitiesDto(new ArrayList<>());
+       List<ActivityDto> activitiesDto = new ArrayList<>();
         for (ActivityModel activity : this.activities){
             if (activity !=null ){
-                if (activity.getSport() == "BIKE"){
-                }
-                else if (activity.getSport() == "RUN"){
+                ActivityTypeDto sport = this.determineSport(activity);
 
-                }
-
+                allActivitiesDto.addActivity(activity.getId(), sport, activity.getDistance());
             }
-        }*/
-        return null;
+        }
+        return allActivitiesDto;
+    }
+
+    private static ActivityTypeDto determineSport(ActivityModel activity){
+        ActivityTypeDto sport = ActivityTypeDto.BIKE;
+        if (activity.getSport() == "BIKE"){
+            sport = ActivityTypeDto.BIKE;
+        }
+        else {
+            sport = ActivityTypeDto.RUN;
+        }
+        return sport;
     }
 
     @Override
     public SummaryDto getSummary(String id) {
+        /*
+        for (ActivityModel activity : this.activities){
+            if (activity.getId().equals(id)){
+                ActivityTypeDto sport = this.determineSport(activity);
+                SummaryDto sumary = new SummaryDto(sport, activity.getDistance(), activity.getDuration(), activity.)
+                return sumary;
+            }
+        }*/
         return null;
     }
 
