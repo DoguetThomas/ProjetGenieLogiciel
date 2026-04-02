@@ -24,7 +24,6 @@ public class Traitement {
      * chaque ligne à sa séance correspondante
      * * @return Une map qui regroupe les données par séance
      */
-
     private Map<String, List<StravaRecord>> RecordSorter(){
         Map<String, List<StravaRecord>> sortedMap = new HashMap<>();
 
@@ -50,17 +49,44 @@ public class Traitement {
         // ajout de l'enregistrement à la liste de son activité
         sortedMap.get(activityId).add(record);
         }
-        
-        return sortedMap;
 
+        return sortedMap;
     }
 
     private String determineSportType(String id){
         return null;
     }
 
-    private Double getDist(String id){
-        return null;
+    /**
+     * Calcule la distance totale parcourue lors d'une activité.
+     * Méthode qui recherche et retourne la valeur de distance maximale enregistrée.
+     *
+     * @param id L'identifiant de la séance (ex: "Activity_1").
+     * @return La distance totale en mètres, ou 0.0 si l'activité est introuvable.
+     */
+    private Double getDist(String id) {
+
+        // vérifie que la séance existe bien retourne 0.0 sinon
+        if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
+            return 0.0;
+        }
+
+        // récupère toutes les lignes de la séance
+        List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
+
+        Double maxDistance = 0.0;
+
+        // parcours toutes lignes pour trouver la distance la plus élevée
+        for (StravaRecord record : recordsForActivity) {
+            Double currentDist = record.getDistance();
+
+            // met à jour le maximum
+            if (currentDist != null && currentDist > maxDistance) {
+                maxDistance = currentDist;
+            }
+        }
+
+        return maxDistance;
     }
 
     private Double getDuration(String id){
