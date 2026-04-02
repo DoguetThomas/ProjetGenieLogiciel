@@ -102,17 +102,17 @@ public class Traitement {
      * @param id L'identifiant de la séance
      * @return La durée totale en secondes (Double), ou 0.0 si introuvable
      */
-    private Double getDuration(String id){
+    private Integer getDuration(String id){
 
         if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
-            return 0.0;
+            return 0;
         }
 
         List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
 
         // si la liste est vide, retourne 0.0
         if (recordsForActivity.isEmpty()) {
-            return 0.0;
+            return 0;
         }
 
         LocalDateTime startTime = null;
@@ -136,17 +136,20 @@ public class Traitement {
 
         // au cas où aucune ligne n'avait d'heure valide
         if (startTime == null || endTime == null) {
-            return 0.0;
+            return 0;
         }
 
         // calcul de l'écart
-        long seconds = Duration.between(startTime, endTime).getSeconds();
+        long DurationSeconds = Duration.between(startTime, endTime).getSeconds();
 
-        return (double) seconds;
+        return (int) DurationSeconds;
     }
 
     private Double getAvgSpeed(String id){
-        return null;
+
+        this.getDuration(DurationSeconds)
+        double AvgSpeed = DistanceKm /
+        return AvgSpeed ;
     }
 
 
