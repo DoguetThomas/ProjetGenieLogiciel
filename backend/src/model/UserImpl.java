@@ -8,6 +8,7 @@ public class UserImpl implements UserModel{
     private double weight;
     private double maxHRUser;
 
+
     public UserImpl(int age, boolean genre, double height, double weight) {
         this.age = age;
         this.genre = genre;
@@ -63,7 +64,7 @@ public class UserImpl implements UserModel{
      * @return maxHRUser
      */
     @Override
-    public double setMaxHRUser(int age, boolean genre) {
+    public void setMaxHRUser(int age, boolean genre) {
         this.age = age;
         this.genre = genre;
 
@@ -74,8 +75,14 @@ public class UserImpl implements UserModel{
         } else {
             maxHRUser = 220 - age;
         }
-        //Pour les hommes : FCmax = 220 – âge
-        //Pour les femmes : FCmax = 226 – âge
+    }
+
+    /**
+     * Récupère la FCmax théorique de l'User
+     * @return maxHRUser
+     */
+    @Override
+    public double getMaxHRUser() {
         return maxHRUser;
     }
 
