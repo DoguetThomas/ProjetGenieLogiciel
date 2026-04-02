@@ -19,7 +19,28 @@ public class Traitement {
     }
 
     private Map<String, List<StravaRecord>> RecordSorter(){
-        return null;
+        Map<String, List<StravaRecord>> sortedMap = new HashMap<>();
+
+        if (this.records == null) {
+            return sortedMap;
+        }
+
+        for (StravaRecord record : this.records) {
+            String activityId = record.getDatafile();
+
+            if (activityId == null || activityId.isEmpty()) {
+                continue;
+            }
+
+        if (!sortedMap.containsKey(activityId)) {
+            sortedMap.put(activityId, new ArrayList<>());
+        }
+
+        sortedMap.get(activityId).add(record);
+        }
+
+        return sortedMap;
+
     }
 
     private String determineSportType(String id){
@@ -68,4 +89,4 @@ public class Traitement {
         return null;
     }
 
-}
+
