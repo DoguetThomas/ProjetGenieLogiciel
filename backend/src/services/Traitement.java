@@ -146,13 +146,19 @@ public class Traitement {
         return (int) DurationSeconds;
     }
 
-    private Double getAvgSpeed(String id) {
-
-        //this.getDuration(DurationSeconds)
-        //double AvgSpeed = DistanceKm /
-        //return AvgSpeed;
-        return null;
+    /**
+     * Calcule la vitesse moyenne en km/h d'une activité
+     * @param id L'identifiant de la séance
+     * @return La vitesse moyenne en km/h : AvgSpeed
+     */
+    private Double getAvgSpeed(String id){
+        // conversion du temps de secondes à heure
+        int DurationHour = this.getDuration(id) / 3600;
+        // calcul distance
+        double AvgSpeed = this.getDist(id) / DurationHour;
+        return AvgSpeed ;
     }
+
 
 
     private Double getAvgPace(String id) {
