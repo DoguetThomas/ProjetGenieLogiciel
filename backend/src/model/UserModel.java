@@ -74,7 +74,7 @@ public interface UserModel {
 
     /**
      * Récupère les 4 seuils de HR pour séparer les 5 zones de HR de Garmin
-     * @return
+     * @return seuilZoneHR
      */
 
     public ArrayList getSeuilZoneHR();
