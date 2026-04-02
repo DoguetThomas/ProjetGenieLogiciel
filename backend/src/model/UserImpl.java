@@ -69,7 +69,7 @@ public class UserImpl implements UserModel{
 
         // lever une exception pour l'age
 
-        if (genre==true){
+        if (genre){
             maxHRUser = 226 - age;
         } else {
             maxHRUser = 220 - age;
