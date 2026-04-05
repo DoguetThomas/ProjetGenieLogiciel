@@ -58,8 +58,31 @@ public class Traitement {
         return sortedMap;
     }
 
+    /**
+     * Déduit le type de sport en se basant sur la vitesse moyenne
+     * Si la vitesse >  15 km/h, l'activité est considérée comme du vélo.
+     * Sinon, elle est considérée comme de la course à pied.
+     *
+     * @param id L'identifiant de la séance.
+     * @return "Vélo", "Course à pied", ou "Inconnu" si la vitesse ne peut pas être calculée.
+     */
     private String determineSportType(String id) {
-        return null;
+        // On récupère la vitesse moyenne grâce à la méthode AvgSpeed
+        Double avgSpeed = this.getAvgSpeed(id);
+
+        // Si la vitesse n'est pas calculable
+        if (avgSpeed == null || avgSpeed.isNaN()) {
+            return "Inconnu";
+        }
+
+        // Seuil
+        double seuilVitesse = 15.0;
+
+        if (avgSpeed > seuilVitesse) {
+            return "Vélo";
+        } else {
+            return "Course à pied";
+        }
     }
 
     /**
@@ -153,7 +176,7 @@ public class Traitement {
      */
     private Double getAvgSpeed(String id){
         // conversion du temps de secondes à heure
-        int durationHour = this.getDuration(id) / 3600;
+        double durationHour = this.getDuration(id) / 3600.0;
         // calcul distance
         double avgSpeed = this.getDist(id) / durationHour;
         return avgSpeed ;
