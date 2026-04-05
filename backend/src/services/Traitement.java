@@ -316,12 +316,42 @@ public class Traitement {
         return null;
     }
 
+
     /**
-     * Transforme les données triées en une liste d'objets ActivityModel complets.
-     * C'est le point de sortie principal du service de traitement.
-     * * @return La liste de toutes les activités calculées.
+     * Transforme les données triées par activité en une liste d'objets ActivityModel
+     * * @return La liste de toutes les activités prêtes à être affichées.
      */
-    public List<ActivityModel> getActivities() {return null;}
+    /*public List<ActivityModel> getActivities() {
+        List<ActivityModel> activityList = new ArrayList<>();
+
+        // vérifie si les données sont bien chargées
+        if (this.sortedRecords == null || this.sortedRecords.isEmpty()) {
+            return activityList;
+        }
+
+        for (String id : this.sortedRecords.keySet()) {
+
+            // crée une nouvelle instance de ton implémentation
+            ActivityImpl activity = new ActivityImpl();
+
+            // remplit l'objet avec les résultats des méthodes
+            activity.setId(id);
+            activity.setDistance(this.getDist(id));
+            activity.setDuration(this.getDuration(id));
+            activity.setAvgSpeed(this.getAvgSpeed(id));
+            activity.setAvgPace(this.getAvgPace(id));
+            activity.setAvgHR(this.getAvgHR(id));
+            activity.setMaxHR(this.getMaxHR(id));
+            activity.setAvgPower(this.getAvgPower(id));
+
+            activity.setSport(this.determineSportType(id));
+
+            // ajoute à la liste finale
+            activityList.add(activity);
+        }
+
+        return activityList;*/
+    }
 
 
 
