@@ -183,8 +183,21 @@ public class Traitement {
     }
 
 
-    private Double getAvgPace(String id) {
-        return null;
+    /**
+     * Calcule l'allure moyenne globale de l'activité
+     * * @param id L'identifiant de la séance
+     * @return L'allure en secondes par kilomètre (voir PaceDTO)
+     */
+    public Double getAvgPace(String id) {
+        Double distanceKm = this.getDist(id);
+        Integer duration = this.getDuration(id);
+
+        // éviter la division par 0
+        if (distanceKm <= 0) {
+            return 0.0;
+        }
+        
+        return (duration / distanceKm) * 1000;
     }
 
     /**
