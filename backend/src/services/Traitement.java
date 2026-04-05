@@ -3,6 +3,7 @@ package services;
 import model.StravaRecord;
 import model.UserModel;
 import model.ActivityModel;
+import model.ActivityImpl;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -315,9 +316,14 @@ public class Traitement {
         return null;
     }
 
-    public List<ActivityModel> getActivities() {
-        return null;
-    }
+    /**
+     * Transforme les données triées en une liste d'objets ActivityModel complets.
+     * C'est le point de sortie principal du service de traitement.
+     * * @return La liste de toutes les activités calculées.
+     */
+    public List<ActivityModel> getActivities() {return null;}
+
+
 
 }
 
