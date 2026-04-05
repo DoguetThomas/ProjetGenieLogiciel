@@ -196,8 +196,8 @@ public class Traitement {
         if (distanceKm <= 0) {
             return 0.0;
         }
-        
-        return (duration / distanceKm) * 1000;
+
+        return duration / distanceKm;
     }
 
     /**
