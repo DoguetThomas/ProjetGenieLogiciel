@@ -1,4 +1,5 @@
 package model;
+import java.util.List;
 
 public class ActivityImpl implements ActivityModel{
     private String id;
@@ -15,9 +16,11 @@ public class ActivityImpl implements ActivityModel{
     private int tz3;
     private int tz4;
     private int tz5;
+    private List<GpsPoint> route;
+    private List<Integer>splits ;
 
 
-    public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, int tz1, int tz2, int tz3, int tz4, int tz5) {
+    public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, int tz1, int tz2, int tz3, int tz4, int tz5, List<GpsPoint> route, List<Integer>splits) {
         this.id = id;
         this.distance = distance;
         this.avgSpeed = avgSpeed;
@@ -32,6 +35,9 @@ public class ActivityImpl implements ActivityModel{
         this.tz3 = tz3;
         this.tz4 = tz4;
         this.tz5 = tz5;
+        this.route = route;
+        this.splits = splits
+
     }
 
 
@@ -182,6 +188,24 @@ public class ActivityImpl implements ActivityModel{
 
     @Override
     public void setTz5(Double tz5) {
+
+    }
+
+    public List<GpsPoint> getRoute() {
+        return this.route;
+    }
+
+    public void setRoute(List<GpsPoint> route) {
+        this.route = route;
+    }
+
+
+    public List<Integer> getSplits() {
+        return this.splits;
+    }
+
+    public void setSplits(List<Integer> splits) {
+        this.splits = splits;
 
     }
 
