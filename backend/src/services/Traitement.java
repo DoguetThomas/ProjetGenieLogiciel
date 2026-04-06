@@ -1,9 +1,6 @@
 package services;
 
-import model.StravaRecord;
-import model.UserModel;
-import model.ActivityModel;
-import model.ActivityImpl;
+import model.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -172,21 +169,23 @@ public class Traitement {
 
     /**
      * Calcule la vitesse moyenne en km/h d'une activité
+     *
      * @param id L'identifiant de l'activité
      * @return La vitesse moyenne en km/h : AvgSpeed
      */
-    private Double getAvgSpeed(String id){
+    private Double getAvgSpeed(String id) {
         // conversion du temps de secondes à heure
         double durationHour = this.getDuration(id) / 3600.0;
         // calcul distance
         double avgSpeed = this.getDist(id) / durationHour;
-        return avgSpeed ;
+        return avgSpeed;
     }
 
 
     /**
      * Calcule l'allure moyenne globale de l'activité
      * * @param id L'identifiant de la séance
+     *
      * @return L'allure en secondes par kilomètre (voir PaceDTO)
      */
     public Double getAvgPace(String id) {
@@ -203,6 +202,7 @@ public class Traitement {
 
     /**
      * Calcule la FC moyenne pour une activité
+     *
      * @param id L'identifiant de l'activité
      * @return La FC moyenne sous forme de double
      */
@@ -213,13 +213,13 @@ public class Traitement {
         // On récupère la liste des points Cardio pour l'activité ciblée par l'ID
         List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
 
-        if (recordsForActivity.isEmpty ()) {
+        if (recordsForActivity.isEmpty()) {
             // On retourne 0.0 si la liste est vide
             return 0.0;
         }
         // On crée une variable pour stocker la somme de toutes les FC et un compteur pour
         // combien de points on additionne
-        double totalHR = 0.0 ;
+        double totalHR = 0.0;
         int count = 0;
 
         for (StravaRecord record : recordsForActivity) {
@@ -227,19 +227,21 @@ public class Traitement {
 
             // On vérifie qu'il existe bien une valeur de fréquence cardiaque pour chaque ligne
             if (HR != null && HR > 0) {
-            totalHR += HR;
-            count++;
+                totalHR += HR;
+                count++;
             }
         }
         // Pour éviter la divison par 0
-        if (count==0){
+        if (count == 0) {
             return 0.0;
         }
-        double avgHR = totalHR / count ;
+        double avgHR = totalHR / count;
         return avgHR;
     }
+
     /**
      * Calcule la FC max pour une activité
+     *
      * @param id L'identifiant de l'activité
      * @return La FC max sous forme de double
      */
@@ -261,7 +263,7 @@ public class Traitement {
             // On regarde la FC à chaque ligne et si elle est supérieur à notre max actuel
             if (HR != null && HR > maxHR) {
                 // Elle devient notre nouveau max
-                maxHR= HR;
+                maxHR = HR;
             }
         }
 
@@ -270,6 +272,7 @@ public class Traitement {
 
     /**
      * Calcule la puissance moyenne pour une activité
+     *
      * @param id L'identifiant de l'activité
      * @return La puissance moyenne sous forme de double
      */
@@ -280,29 +283,29 @@ public class Traitement {
         // On récupère la liste des points pour l'activité ciblée par l'ID
         List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
 
-        if (recordsForActivity == null || recordsForActivity.isEmpty ()) {
+        if (recordsForActivity == null || recordsForActivity.isEmpty()) {
             // On retourne 0.0 si la liste est vide
             return 0.0;
         }
         // On crée une variable pour stocker la somme de toutes les puissances et un compteur pour
         // combien de points on additionne
-        double totalPower = 0.0 ;
+        double totalPower = 0.0;
         int count = 0;
 
         for (StravaRecord record : recordsForActivity) {
             Double power = record.getPower();
 
             // On vérifie qu'il existe bien une valeur de puissance pour chaque ligne
-            if (power != null ) {
+            if (power != null) {
                 totalPower += power;
                 count++;
             }
         }
         // Pour éviter la divison par 0
-        if (count==0){
+        if (count == 0) {
             return 0.0;
         }
-        double avgPower = totalPower / count ;
+        double avgPower = totalPower / count;
         return avgPower;
     }
 
@@ -353,8 +356,59 @@ public class Traitement {
         return activityList;
     }*/
 
+    /**
+     * Convertit les coordonnées brutes en données GPS classiques
+     */
+
+    private Double toGpsDegrees(Double raw) {
+        if (raw == null) {
+            return null;
+        }
+        if (Math.abs(raw) <= 180) {
+            return raw;
+        }
+        return raw * (180.0 / 2147483648.0);
+    }
+
+
+    /**
+     * Récupère l'itinéraire d'une activité sous forme de liste de coordonnées GPS.
+     * Convertit automatiquement les valeurs brutes en degrés décimaux.
+     * @param id L'identifiant de la séance.
+     * @return Une liste d'objets GpsPoint.
+     */
+    public List<GpsPoint> getRoute(String id) {
+        List<GpsPoint> route = new ArrayList<>();
+
+        if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
+            return route;
+        }
+
+            List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
+
+            for (StravaRecord record : recordsForActivity) {
+                // Récupération des valeurs brutes depuis l'enregistrement
+                Double rawLat = record.getPositionLat();
+                Double rawLng = record.getPositionLong();
+
+                // pour ignorer les pertes du signal GPS
+                if (rawLat != null && rawLng != null) {
+
+                    Double latDegrees = this.toGpsDegrees(rawLat);
+                    Double lngDegrees = this.toGpsDegrees(rawLng);
+
+                    // pour ajouter chaque point converti à notre itinéraire
+                    route.add(new GpsPoint(latDegrees, lngDegrees));
+                }
+            }
+
+        return route;
+    }
+
+
 
 
 }
+
 
 

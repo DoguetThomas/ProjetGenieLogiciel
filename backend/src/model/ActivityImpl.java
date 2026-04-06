@@ -36,7 +36,7 @@ public class ActivityImpl implements ActivityModel{
         this.tz4 = tz4;
         this.tz5 = tz5;
         this.route = route;
-        this.splits = splits
+        this.splits = splits;
 
     }
 
