@@ -420,9 +420,59 @@ public class Traitement {
         return splits;
     }
 
+    /**
+     * Calcul le temps dans les zones en seconde
+     * @return Arraylist de 5 int pour les 5 zones.
+     */
+    private ArrayList<Integer> calculateTimeInZones(String id) {
+        if (this.sortedRecords == null) {
+            return null;
+        }
+        // On récupère la liste des points pour l'activité ciblée par l'ID
+        List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
 
-    private Double[] calculateTimeInZones() {
-        return null;
+        if (recordsForActivity == null || recordsForActivity.isEmpty()) {
+            // On retourne 0.0 si la liste est vide
+            return null;
+        }
+
+        // On créer des durations par zones
+        int zt1 = 0, zt2 = 0, zt3 = 0, zt4 = 0, zt5 = 0;
+        ArrayList<Double> zoneHR = user.getSeuilZoneHR();
+
+        for (StravaRecord record : recordsForActivity) {
+            Double HR = record.getHeartRate();
+
+            // On vérifie qu'il existe bien une valeur de puissance pour chaque ligne
+            if (HR != null) {
+
+
+                if (HR < zoneHR.get(0)) {
+                        zt1++;
+                } else if (HR < zoneHR.get(1)) {
+                    zt2++;
+                } else if (HR < zoneHR.get(2)) {
+                    zt3++;
+                }else if (HR < zoneHR.get(3)) {
+                    zt4++;
+                }else {
+                    zt5++;
+                }
+
+
+            }
+        }
+
+        // On ajoute tous les int duration zone dans un array qu'on renvoie
+
+        ArrayList<Integer> durations = new ArrayList<>();
+        durations.add(zt1);
+        durations.add(zt2);
+        durations.add(zt3);
+        durations.add(zt4);
+        durations.add(zt5);
+
+        return durations;
     }
 
 
