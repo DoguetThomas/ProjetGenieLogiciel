@@ -2,7 +2,6 @@ package services;
 
 import model.*;
 
-import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -12,9 +11,9 @@ import java.util.*;
 import model.Split;
 
 public class Traitement {
-    private List<StravaRecord> records;
-    private Map<String, List<StravaRecord>> sortedRecords;
-    private UserModel user;
+    private final List<StravaRecord> records;
+    private final Map<String, List<StravaRecord>> sortedRecords;
+    private final UserModel user;
 
     public Traitement(String filePath, UserModel user) {
         this.records = StravaCsvReader.readCsv(filePath);
@@ -113,8 +112,7 @@ public class Traitement {
             }
         }
         // Conversion de la distance em km
-        double distancekm = maxDistance / 1000;
-        return distancekm;
+        return maxDistance / 1000;
     }
 
     /**
@@ -207,7 +205,7 @@ public class Traitement {
      * @return L'allure en secondes par kilomètre (voir PaceDTO)
      */
     private Double getAvgPace(String id) {
-        Double distanceKm = this.getDist(id);
+        double distanceKm = this.getDist(id);
         Integer duration = this.getDuration(id);
 
         // éviter la division par 0
@@ -253,8 +251,7 @@ public class Traitement {
         if (count == 0) {
             return 0.0;
         }
-        double avgHR = totalHR / count;
-        return avgHR;
+        return totalHR / count;
     }
 
     /**
@@ -323,8 +320,7 @@ public class Traitement {
         if (count == 0) {
             return 0.0;
         }
-        double avgPower = totalPower / count;
-        return avgPower;
+        return totalPower / count;
     }
 
 

@@ -15,7 +15,7 @@ import model.UserModel;
  */
 public class StravaUserProfileServiceImpl implements UserProfileService {
 
-    private UserModel user;
+    private final UserModel user;
 
     /**
      * Initialise le service en récupérant l'instance partagée de l'utilisateur.
@@ -28,7 +28,7 @@ public class StravaUserProfileServiceImpl implements UserProfileService {
     @Override
     public UserProfileDto getUserProfile() {
         if (user != null) {
-            GenderDto genre = null;
+            GenderDto genre;
             if (!user.getGenre()) {
                 genre = GenderDto.MALE;
             } else {
@@ -64,8 +64,8 @@ public class StravaUserProfileServiceImpl implements UserProfileService {
 
         // Cast nécessaire car setMaxHRUser et setSeuilZoneHR sont définis
         // dans UserImpl et non dans l'interface UserModel
-        ((UserImpl) this.user).setMaxHRUser(this.user.getAge(), this.user.getGenre());
-        ((UserImpl) this.user).setSeuilZoneHR(this.user.getMaxHRUser());
+        this.user.setMaxHRUser(this.user.getAge(), this.user.getGenre());
+        this.user.setSeuilZoneHR(this.user.getMaxHRUser());
     }
 
 }

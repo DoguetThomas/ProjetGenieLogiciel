@@ -11,7 +11,7 @@ import model.*;
 
 public class StravaAnalyticsServiceImpl implements AnalyticsService{
     private List<ActivityModel> activities;
-    private Traitement traitement;
+    private final Traitement traitement;
 
     /**
      * Initialise le service analytique en utilisant l'instance partagée de
@@ -40,10 +40,9 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
     @Override
     public AllActivitiesDto getAllActivities(){
         AllActivitiesDto allActivitiesDto = new AllActivitiesDto(new ArrayList<>());
-       List<ActivityDto> activitiesDto = new ArrayList<>();
         for (ActivityModel activity : this.activities){
             if (activity !=null ){
-                ActivityTypeDto sport = this.determineSport(activity);
+                ActivityTypeDto sport = determineSport(activity);
 
                 allActivitiesDto.addActivity(activity.getId(), sport, activity.getDistance());
             }
@@ -180,8 +179,8 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
     }
 
     /**
-     * Récupérer les zones pour chaque intensité
-     * @param id
+     * Récupérer les zones pour chaque intensité pour une activité
+     * @param id de l'activité
      * @return les zones en pourcentage pour chaque zone d'intensité
      */
     @Override
