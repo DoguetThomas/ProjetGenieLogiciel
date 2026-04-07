@@ -7,6 +7,7 @@ import java.util.List;
 
 import model.ActivityImpl;
 import model.ActivityModel;
+import model.GpsPoint;
 import model.UserImpl;
 
 public class StravaAnalyticsServiceImpl implements AnalyticsService{
@@ -80,17 +81,16 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
             if (activity != null && id.equals(activity.getId())) {
 
                 // Création d'un tracé GPS fictif (Mock)
-                List<GeoDto> mockRoutePoints = new ArrayList<>();
-
+                List<GpsPoint> pointsGps = activity.getRoute();
+                List<GeoDto> route = new ArrayList<>();
                 // Ajout de quelques points de coordonnées (Latitude, Longitude)
-                mockRoutePoints.add(new GeoDto(48.117266, -1.677792));
-                mockRoutePoints.add(new GeoDto(48.117800, -1.678200));
-                mockRoutePoints.add(new GeoDto(48.118500, -1.679000));
-                mockRoutePoints.add(new GeoDto(48.119200, -1.678500));
-                mockRoutePoints.add(new GeoDto(48.119500, -1.677000));
+                for (GpsPoint point : pointsGps){
+                    route.add(new GeoDto(point.getLatitude(), point.getLongitude()));
+                }
+
 
                 // Retourne le DTO de la route en lui passant uniquement la liste des points
-                return new RouteDto(mockRoutePoints);
+                return new RouteDto(route);
             }
         }
         // Retourne null si aucune activité correspondante n'a été trouvée

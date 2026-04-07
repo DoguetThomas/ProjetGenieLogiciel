@@ -78,9 +78,9 @@ public class Traitement {
         double seuilVitesse = 15.0;
 
         if (avgSpeed > seuilVitesse) {
-            return "Vélo";
+            return "BIKE";
         } else {
-            return "Course à pied";
+            return "RUN";
         }
     }
 
@@ -438,7 +438,7 @@ public class Traitement {
             activity.setAvgHR(this.getAvgHR(id));
             activity.setMaxHR(this.getMaxHR(id));
             activity.setAvgPower(this.getAvgPower(id));
-
+            activity.setRoute(this.getRoute(id));
             activity.setSport(this.determineSportType(id));
 
             // ajoute à la liste finale

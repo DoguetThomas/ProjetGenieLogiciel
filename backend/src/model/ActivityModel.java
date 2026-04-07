@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 public interface ActivityModel {
 
     /**
@@ -171,5 +173,7 @@ public interface ActivityModel {
      */
     public void setTz5(int tz5);
 
+    public List<Split> getSplits();
 
+    public List<GpsPoint> getRoute();
 }
