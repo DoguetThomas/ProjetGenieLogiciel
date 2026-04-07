@@ -420,10 +420,11 @@ public class Traitement {
     }
 
     /**
-     * Calcul le temps dans les zones en seconde
+     * Calcul le temps dans les zones en secondes
      * @return Arraylist de 5 int pour les 5 zones.
      */
-    private ArrayList<Integer> calculateTimeInZones(String id) {
+
+    private ArrayList<Integer> getTimeInZones(String id) {
         if (this.sortedRecords == null) {
             return null;
         }
@@ -475,10 +476,8 @@ public class Traitement {
     }
 
 
-    /**
-     * Transforme les données triées par activité en une liste d'objets ActivityModel
-     * * @return La liste de toutes les activités prêtes à être affichées.
-     */
+
+
     /**
      * Transforme les données triées par activité en une liste d'objets ActivityModel
      * * @return La liste de toutes les activités prêtes à être affichées.
@@ -508,6 +507,8 @@ public class Traitement {
             activity.setRoute(this.getRoute(id));
             activity.setSplits(this.getSplits(id));
             activity.setSport(this.determineSportType(id));
+            activity.setZoneHR(this.getTimeInZones(id));
+
             // ajoute à la liste finale
             activityList.add(activity);
         }

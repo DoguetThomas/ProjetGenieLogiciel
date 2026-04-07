@@ -13,11 +13,30 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
     private List<ActivityModel> activities;
     private Traitement traitement;
 
-    public StravaAnalyticsServiceImpl(){
+    /**
+     * Initialise le service analytique en utilisant l'instance partagée de
+     * l'utilisateur via {@link UserSession}.
+     *
+     * <p>Cela garantit que {@link Traitement} utilise le même {@link model.UserModel}
+     * que {@link StravaUserProfileServiceImpl}. Ainsi, si l'utilisateur met à jour
+     * son profil depuis le frontend, les seuils de zones cardiaques recalculés
+     * sont automatiquement pris en compte lors des prochains appels analytiques.</p>
+     */
+
+
+    public StravaAnalyticsServiceImpl() {
         this.activities = new ArrayList<>();
-        this.traitement = new Traitement("../data/strava.csv", new UserImpl(1, true, 0, 0));
+
+        // Récupération de l'instance partagée — jamais de new UserImpl() ici
+        UserModel user = UserSession.getInstance();
+
+        this.traitement = new Traitement("../data/strava.csv", user);
         this.activities = this.traitement.getActivities();
     }
+
+
+
+
     @Override
     public AllActivitiesDto getAllActivities(){
         AllActivitiesDto allActivitiesDto = new AllActivitiesDto(new ArrayList<>());
@@ -160,8 +179,41 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
         return null;
     }
 
+    /**
+     * Récupérer les zones pour chaque intensité
+     * @param id
+     * @return les zones en pourcentage pour chaque zone d'intensité
+     */
     @Override
     public ZoneDto getMetricsZone(String id) {
+        if (id == null) {
+            return null;
+        }
+
+        for (ActivityModel activity : this.activities) {
+            if (activity != null && id.equals(activity.getId())) {
+                List<Integer> rawZones = activity.getZoneHR();
+
+                if (rawZones == null || rawZones.isEmpty()) {
+                    return new ZoneDto(new int[]{0, 0, 0, 0, 0});
+                }
+
+                int total = 0;
+                for (int z : rawZones) {
+                    total += z;
+                }
+
+                int[] percentages = new int[rawZones.size()];
+                if (total > 0) {
+                    for (int i = 0; i < rawZones.size(); i++) {
+                        percentages[i] = (int) Math.round((rawZones.get(i) * 100.0) / total);
+                    }
+                }
+
+                return new ZoneDto(percentages);
+            }
+        }
         return null;
     }
+
 }

@@ -10,7 +10,7 @@ public class UserImpl implements UserModel{
     private double height;
     private double weight;
     private double maxHRUser;
-    private static ArrayList<Double> seuilZoneHR;
+    private ArrayList<Double> seuilZoneHR;
 
 
     public UserImpl(int age, boolean genre, double height, double weight) {
