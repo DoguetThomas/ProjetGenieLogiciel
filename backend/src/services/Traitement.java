@@ -6,10 +6,9 @@ import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
 import model.Split;
 
 public class Traitement {
@@ -216,7 +215,7 @@ public class Traitement {
             return 0.0;
         }
 
-        return duration / distanceKm;
+        return (duration/60) / distanceKm;
     }
 
     /**
@@ -509,7 +508,6 @@ public class Traitement {
             activity.setRoute(this.getRoute(id));
             activity.setSplits(this.getSplits(id));
             activity.setSport(this.determineSportType(id));
-
             // ajoute à la liste finale
             activityList.add(activity);
         }
@@ -566,9 +564,8 @@ public class Traitement {
         return route;
     }
 
-    public Map<Timestamp, Number> getMetricList(String id, String metric) {
-        /*
-        Map<Timestamp, Number> res = new HashMap<>();
+    public Map<String, Number> getMetricList(String id, String metric) {
+        Map<String, Number> res = new HashMap<>();
         if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
             return res;
         }
@@ -576,12 +573,29 @@ public class Traitement {
         List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
 
         for (StravaRecord record : recordsForActivity) {
+            Number pointsMetric = 0;
+            if (Objects.equals(metric, "Altitude")){
+                pointsMetric = record.getEnhancedAltitude();
+            }
+            else if (Objects.equals(metric, "Speed")){
+                pointsMetric = record.getEnhancedSpeed();
+            }
+            else if (Objects.equals(metric, "HeartRate")){
+                pointsMetric = record.getHeartRate();
+            }
+            else if (Objects.equals(metric, "Power")){
+                pointsMetric = record.getPower();
+            }
+            else if (Objects.equals(metric, "Cadence")){
+                pointsMetric = record.getCadence();
+            }
+            else if (Objects.equals(metric, "GroundTime")){
+                pointsMetric = record.getGroundTime();
+            }
 
+            res.put(DateTimeFormatter.ofPattern("HH:mm:ss").format(record.getTimestamp()), pointsMetric);
         }
-    }
-
-         */
-        return null;
+        return res;
     }
 
 }

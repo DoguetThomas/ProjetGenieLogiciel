@@ -4,7 +4,9 @@ import dto.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import exceptions.ActivityNotFoundException;
 import model.*;
 
 public class StravaAnalyticsServiceImpl implements AnalyticsService{
@@ -40,7 +42,7 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
     }
 
     @Override
-    public SummaryDto getSummary(String id) {
+    public SummaryDto getSummary(String id) throws ActivityNotFoundException {
         if (id == null) {
             return null;
         }
@@ -65,11 +67,11 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
                 );
             }
         }
-        return null;
+        throw new ActivityNotFoundException("Activité inconnue");
     }
 
     @Override
-    public RouteDto getRoute(String id) {
+    public RouteDto getRoute(String id) throws ActivityNotFoundException {
         if (id == null) {
             return null;
         }
@@ -91,54 +93,54 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
             }
         }
         // Retourne null si aucune activité correspondante n'a été trouvée
-        return null;
+        throw new ActivityNotFoundException("Activité inconnue");
     }
 
-    private MetricDto getMetricData(String id, String metricName) {
+    private MetricDto getMetricData(String id, String metricName) throws ActivityNotFoundException {
         if (id == null) {
             return null;
         }
         for (ActivityModel activity : this.activities) {
             if (activity != null && id.equals(activity.getId())) {
                 ActivityTypeDto sport = determineSport(activity);
-                List<TimedValueDto> mockPoints = new ArrayList<>();
-                mockPoints.add(new TimedValueDto("00:00:00", 0.0));
-                mockPoints.add(new TimedValueDto("00:01:00", 12.5));
-                mockPoints.add(new TimedValueDto("00:02:00", 14.2));
-                mockPoints.add(new TimedValueDto("00:03:00", 13.8));
-                return new MetricDto(sport, metricName, mockPoints);
+                List<TimedValueDto> points = new ArrayList<>();
+                for (Map.Entry<String, Number> entry : this.traitement.getMetricList(activity.getId(), metricName).entrySet()){
+                    points.add(new TimedValueDto(entry.getKey(), entry.getValue()));
+                }
+
+                return new MetricDto(sport, metricName, points);
             }
         }
-        return null;
+        throw new ActivityNotFoundException("Activité inconnue");
     }
 
     @Override
-    public MetricDto getMetricsAltitude(String id) {
+    public MetricDto getMetricsAltitude(String id) throws ActivityNotFoundException {
         return getMetricData(id, "Altitude");
     }
 
     @Override
-    public MetricDto getMetricsSpeed(String id) {
+    public MetricDto getMetricsSpeed(String id) throws ActivityNotFoundException {
         return getMetricData(id, "Speed");
     }
 
     @Override
-    public MetricDto getMetricsHeartRate(String id) {
+    public MetricDto getMetricsHeartRate(String id) throws ActivityNotFoundException {
         return getMetricData(id, "HeartRate");
     }
 
     @Override
-    public MetricDto getMetricsPower(String id) {
+    public MetricDto getMetricsPower(String id) throws ActivityNotFoundException {
         return getMetricData(id, "Power");
     }
 
     @Override
-    public MetricDto getMetricsCadence(String id) {
+    public MetricDto getMetricsCadence(String id) throws ActivityNotFoundException {
         return getMetricData(id, "Cadence");
     }
 
     @Override
-    public MetricDto getMetricsGroundTime(String id) {
+    public MetricDto getMetricsGroundTime(String id) throws ActivityNotFoundException {
         return getMetricData(id, "GroundTime");
     }
 
