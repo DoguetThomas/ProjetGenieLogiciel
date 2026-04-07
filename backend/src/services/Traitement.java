@@ -168,18 +168,35 @@ public class Traitement {
         return (int) durationSeconds;
     }
 
+
     /**
-     * Calcule la vitesse moyenne en km/h d'une activité
+     * Calcule la vitesse moyenne d'une activité en mètres par seconde.
+     * Cette méthode se base sur la colonne "enhanced_speed"
+     * des enregistrements Strava. Les points sans données de vitesse sont ignorés.
      *
-     * @param id L'identifiant de l'activité
-     * @return La vitesse moyenne en km/h : AvgSpeed
+     * @param id L'identifiant unique de l'activité
+     * @return La vitesse moyenne en m/s, ou 0.0 si aucune donnée n'est disponible.
      */
     private Double getAvgSpeed(String id) {
-        // conversion du temps de secondes à heure
-        double durationHour = this.getDuration(id) / 3600.0;
-        // calcul distance
-        double avgSpeed = this.getDist(id) / durationHour;
-        return avgSpeed;
+        // récupère la liste des enregistrements pour cette activité
+        List<StravaRecord> records = this.sortedRecords.get(id);
+
+        if (records == null || records.isEmpty()) {
+            return 0.0;
+        }
+
+        double totalSpeed = 0.0;
+        int count = 0;
+
+        // parcourt chaque ligne de l'activité
+        for (StravaRecord record : records) {
+            if (record.getEnhancedSpeed() != null) {
+                totalSpeed += record.getEnhancedSpeed();
+                count++;
+            }
+        }
+
+        return count > 0 ? (totalSpeed / count) : 0.0;
     }
 
 
