@@ -17,10 +17,10 @@ public class ActivityImpl implements ActivityModel{
     private int tz4;
     private int tz5;
     private List<GpsPoint> route;
-    private List<Integer>splits ;
+    private List<Split>splits ;
 
 
-    public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, int tz1, int tz2, int tz3, int tz4, int tz5, List<GpsPoint> route, List<Integer>splits) {
+    public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, int tz1, int tz2, int tz3, int tz4, int tz5, List<GpsPoint> route, List<Split>splits) {
         this.id = id;
         this.distance = distance;
         this.avgSpeed = avgSpeed;
@@ -183,11 +183,11 @@ public class ActivityImpl implements ActivityModel{
     }
 
 
-    public List<Integer> getSplits() {
+    public List<Split> getSplits() {
         return this.splits;
     }
 
-    public void setSplits(List<Integer> splits) {
+    public void setSplits(List<Split> splits) {
         this.splits = splits;
 
     }
