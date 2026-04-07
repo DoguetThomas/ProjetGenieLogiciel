@@ -34,12 +34,15 @@ public class StravaUserProfileServiceImpl implements UserProfileService{
 
     @Override
     public void setUserProfile(UserProfileDto userProfileDto) {
-        /*
+
         this.user.setAge(userProfileDto.getAge());
-        this.user.setGenre(UserProfileDto.);
-        this.user.setWeight(UserProfileDto.getWeight());
-        this.user.setHeight(UserProfileDto.getHeight());
-        */
+
+        this.user.setWeight(userProfileDto.getWeight());
+        this.user.setHeight(userProfileDto.getHeight());
+
+        boolean isFemale = (userProfileDto.getGender() == GenderDto.FEMALE);
+        this.user.setGenre(isFemale);
+
     }
 
 }
