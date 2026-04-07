@@ -7,16 +7,16 @@ import java.util.List;
 
 import model.ActivityImpl;
 import model.ActivityModel;
+import model.UserImpl;
 
 public class StravaAnalyticsServiceImpl implements AnalyticsService{
     private List<ActivityModel> activities;
+    private Traitement traitement;
 
     public StravaAnalyticsServiceImpl(){
         this.activities = new ArrayList<>();
-        ActivityModel activity1 = new ActivityImpl("1",2000.0,15.0,"BIKE",6000,80.0,147.0,200.0,45.0,1500,1500,2000,500,500);
-        ActivityModel activity2 = new ActivityImpl("2",2000.0,15.0,"RUN",6000,80.0,147.0,200.0,45.0,1500,1500,2000,500,500);
-        this.activities.add(activity1);
-        this.activities.add(activity2);
+        this.traitement = new Traitement("../data/strava.csv", new UserImpl(1, true, 0, 0));
+        this.activities = this.traitement.getActivities();
     }
     @Override
     public AllActivitiesDto getAllActivities(){
