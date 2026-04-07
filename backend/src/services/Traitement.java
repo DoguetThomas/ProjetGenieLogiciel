@@ -197,7 +197,7 @@ public class Traitement {
             }
         }
 
-        return count > 0 ? (totalSpeed / count) : 0.0;
+        return count > 0 ? (totalSpeed / count) * 3.6 : 0.0;
     }
 
 
