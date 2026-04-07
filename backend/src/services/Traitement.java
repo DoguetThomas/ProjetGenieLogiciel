@@ -2,6 +2,7 @@ package services;
 
 import model.*;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -178,13 +179,26 @@ public class Traitement {
      * @return La vitesse moyenne en m/s, ou 0.0 si aucune donnée n'est disponible.
      */
     private Double getAvgSpeed(String id) {
-        // conversion du temps de secondes à heure
-        double durationHour = this.getDuration(id) / 3600.0;
-        // calcul distance
-        double avgSpeed = this.getDist(id) / durationHour;
-        return avgSpeed;
-    }
+        // récupère la liste des enregistrements pour cette activité
+        List<StravaRecord> records = this.sortedRecords.get(id);
 
+        if (records == null || records.isEmpty()) {
+            return 0.0;
+        }
+
+        double totalSpeed = 0.0;
+        int count = 0;
+
+        // parcourt chaque ligne de l'activité
+        for (StravaRecord record : records) {
+            if (record.getEnhancedSpeed() != null) {
+                totalSpeed += record.getEnhancedSpeed();
+                count++;
+            }
+        }
+
+        return count > 0 ? (totalSpeed / count) : 0.0;
+    }
 
 
     /**
@@ -193,7 +207,7 @@ public class Traitement {
      *
      * @return L'allure en secondes par kilomètre (voir PaceDTO)
      */
-    public Double getAvgPace(String id) {
+    private Double getAvgPace(String id) {
         Double distanceKm = this.getDist(id);
         Integer duration = this.getDuration(id);
 
@@ -322,7 +336,7 @@ public class Traitement {
      * @param id L'identifiant unique de l'activité
      * @return Une liste d'objets Split contenant les statistiques de chaque kilomètre
      */
-    public List<Split> getSplits(String id) {
+    private List<Split> getSplits(String id) {
 
         List<Split> splits = new ArrayList<>();
 
@@ -443,6 +457,7 @@ public class Traitement {
             activity.setMaxHR(this.getMaxHR(id));
             activity.setAvgPower(this.getAvgPower(id));
             activity.setRoute(this.getRoute(id));
+            activity.setSplits(this.getSplits(id));
             activity.setSport(this.determineSportType(id));
 
             // ajoute à la liste finale
@@ -473,7 +488,7 @@ public class Traitement {
      * @param id L'identifiant de la séance.
      * @return Une liste d'objets GpsPoint.
      */
-    public List<GpsPoint> getRoute(String id) {
+    private List<GpsPoint> getRoute(String id) {
         List<GpsPoint> route = new ArrayList<>();
 
         if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
@@ -499,6 +514,24 @@ public class Traitement {
             }
 
         return route;
+    }
+
+    public Map<Timestamp, Number> getMetricList(String id, String metric) {
+        /*
+        Map<Timestamp, Number> res = new HashMap<>();
+        if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
+            return res;
+        }
+
+        List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
+
+        for (StravaRecord record : recordsForActivity) {
+
+        }
+    }
+
+         */
+        return null;
     }
 
 }

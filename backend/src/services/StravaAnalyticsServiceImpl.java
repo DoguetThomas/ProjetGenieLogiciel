@@ -5,10 +5,7 @@ import dto.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.ActivityImpl;
-import model.ActivityModel;
-import model.GpsPoint;
-import model.UserImpl;
+import model.*;
 
 public class StravaAnalyticsServiceImpl implements AnalyticsService{
     private List<ActivityModel> activities;
@@ -147,6 +144,17 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
 
     @Override
     public PaceDto getMetricsPace(String id) {
+        for (ActivityModel activity : this.activities) {
+            if (activity != null && id.equals(activity.getId())) {
+                List<SplitDto> liste = new ArrayList<>();
+                List<Split> splits= activity.getSplits();
+                for (Split split : splits){
+                    SplitDto splitDto = new SplitDto(split.getKm(), split.getDurationSeconds(), split.getAvgHeartRate());
+                    liste.add(splitDto);
+                }
+                return new PaceDto(liste);
+            }
+        }
         return null;
     }
 
