@@ -13,9 +13,9 @@ public class ActivityImpl implements ActivityModel{
     private Double avgPace;
     private List<Integer> zoneHR;
     private List<GpsPoint> route;
-    private List<Split>split ;
+    private List<Split>splits ;
 
-
+  
     public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, List<Integer> zoneHR, List<GpsPoint> route, List<Split>splits) {
         this.id = id;
         this.distance = distance;
@@ -30,6 +30,9 @@ public class ActivityImpl implements ActivityModel{
         this.route = route;
         this.splits = splits;
 
+    }
+
+    public ActivityImpl() {
     }
 
     @Override
@@ -132,6 +135,7 @@ public class ActivityImpl implements ActivityModel{
     }
 
 
+    @Override
     public List<GpsPoint> getRoute() {
         return this.route;
     }
@@ -140,12 +144,12 @@ public class ActivityImpl implements ActivityModel{
         this.route = route;
     }
 
-
-    public List<Integer> getSplits() {
+    @Override
+    public List<Split> getSplits() {
         return this.splits;
     }
 
-    public void setSplits(List<Integer> splits) {
+    public void setSplits(List<Split> splits) {
         this.splits = splits;
 
     }

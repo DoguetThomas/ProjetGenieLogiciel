@@ -118,5 +118,8 @@ public interface ActivityModel {
     public void setZoneHR(List<Integer> zoneHR);
 
     public List<Integer> getZoneHR();
+  
+    public List<Split> getSplits();
 
+    public List<GpsPoint> getRoute();
 }
