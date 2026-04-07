@@ -13,7 +13,6 @@ public class UserImpl implements UserModel{
         this.height = height;
         this.weight = weight;
     }
-
     @Override
     public int getAge() {
         return 0;

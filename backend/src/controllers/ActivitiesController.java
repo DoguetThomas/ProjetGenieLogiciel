@@ -1,6 +1,7 @@
 package controllers;
 
 import services.AnalyticsService;
+import services.EnhancedAnalyticsService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,10 +16,12 @@ import java.util.function.Function;
 public class ActivitiesController extends AbstractController {
 
     private final AnalyticsService analyticsService;
+    private final EnhancedAnalyticsService enhancedAnalyticsService;
     private final Map<String, Function<String, Object>> metricsHandlers = new HashMap<>();
 
-    public ActivitiesController(AnalyticsService analyticsService) {
+    public ActivitiesController(AnalyticsService analyticsService, EnhancedAnalyticsService enhancedAnalyticsService) {
         this.analyticsService = analyticsService;
+        this.enhancedAnalyticsService = enhancedAnalyticsService;
         initMetrics();
     }
 
@@ -50,5 +53,10 @@ public class ActivitiesController extends AbstractController {
             }
             return json(handler.apply(id));
         });
+
+        get("/api/activities/{id}/elevation", (ex, p) -> json(enhancedAnalyticsService.getElevationGain(p.get("id"))));
+
+        get("/api/activities/{id}/vertical-ratio", (ex, p) -> json(enhancedAnalyticsService.getVerticalRatio(p.get("id"))));
+
     }
 }

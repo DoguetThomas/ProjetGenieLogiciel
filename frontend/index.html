@@ -18,6 +18,8 @@
         <p id="status-message" class="status-message"></p>
       </div>
       <div class="header-actions">
+        <button id="load-new-activities-header-btn" class="profile-settings-btn" type="button">Load activity from
+          file</button>
         <button id="profile-settings-btn" class="profile-settings-btn" type="button">Profile Settings</button>
       </div>
     </header>
@@ -28,6 +30,7 @@
         <div class="controls">
           <label for="activity-select">Choose activity</label>
           <select id="activity-select"></select>
+          <input id="fit-file-input" type="file" accept=".fit" hidden />
         </div>
         <ul id="activity-list" class="activity-list"></ul>
       </section>
@@ -123,7 +126,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="app.js?v=20260329-1650"></script>
+  <script src="app.js?v=20260403-1530"></script>
 </body>
 
 </html>

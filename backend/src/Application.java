@@ -1,6 +1,7 @@
 
 import com.sun.net.httpserver.HttpServer;
 import controllers.ActivitiesController;
+import controllers.ImportController;
 import controllers.UserProfileController;
 import launch.ApplicationConfig;
 
@@ -8,7 +9,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 /**
- * Main application class that initializes the HTTP server and sets up the controllers for handling API requests.
+ * Main application class that initializes the HTTP server and sets up the
+ * controllers for handling API requests.
  * 
  * Do not modify this class.
  */
@@ -18,8 +20,9 @@ public class Application {
         ApplicationConfig config = ApplicationConfig.getConfiguration();
 
         HttpServer server = HttpServer.create(new InetSocketAddress(config.PORT), 0);
-        server.createContext("/api/activities", new ActivitiesController(config.getAnalyticsService()));
+        server.createContext("/api/activities", new ActivitiesController(config.getAnalyticsService(), config.getEnhancedAnalyticsService()));
         server.createContext("/api/user-profile", new UserProfileController(config.getUserProfileService()));
+        server.createContext("/api/import", new ImportController(config.getStravaSyncService()));
 
         server.setExecutor(null);
         server.start();

@@ -1,6 +1,7 @@
 const API_BASE = 'http://localhost:8090/api';
 const ACTIVITIES_BASE = `${API_BASE}/activities`;
 const ACTIVITIES_ALL_ROUTE = `${ACTIVITIES_BASE}/all`;
+const IMPORT_FIT_ROUTE = `${API_BASE}/import`;
 const USER_PROFILE_ROUTE = `${API_BASE}/user-profile`;
 const USER_PROFILE_ROUTE_FALLBACK = `${API_BASE}/userProfile`;
 const DEFAULT_PLACEHOLDER = '-';
@@ -27,6 +28,8 @@ const powerChartPanelEl = document.getElementById('power-chart-panel');
 const cadenceChartPanelEl = document.getElementById('cadence-chart-panel');
 const groundTimeChartPanelEl = document.getElementById('ground-time-chart-panel');
 const profileSettingsBtnEl = document.getElementById('profile-settings-btn');
+const loadNewActivitiesHeaderBtnEl = document.getElementById('load-new-activities-header-btn');
+const fitFileInputEl = document.getElementById('fit-file-input');
 const profileModalEl = document.getElementById('profile-modal');
 const profileFormEl = document.getElementById('profile-form');
 const profileCancelBtnEl = document.getElementById('profile-cancel-btn');
@@ -34,6 +37,15 @@ const profileGenderEl = document.getElementById('profile-gender');
 const profileAgeEl = document.getElementById('profile-age');
 const profileWeightEl = document.getElementById('profile-weight');
 const profileHeightEl = document.getElementById('profile-height');
+
+let isRefreshingAllData = false;
+let refreshQueued = false;
+
+window.ui = window.ui || {};
+window.ui.refreshAllData = refreshAllDataFromNotification;
+window.ui.refreshActivities = refreshActivitiesFromNotification;
+window.ui.refreshUserProfile = refreshUserProfileFromNotification;
+window.ui.refreshSegments = refreshSegmentsFromNotification;
 
 init().catch((error) => {
   setStatus(`Initialization failed: ${error.message}`, 'error');
@@ -46,10 +58,159 @@ async function init() {
   renderConditionalMetricPanels(null);
   await loadActivities();
 
+  loadNewActivitiesHeaderBtnEl?.addEventListener('click', async () => {
+    await loadNewActivitiesFromFrontend();
+  });
+
+  fitFileInputEl?.addEventListener('change', async () => {
+    await importFitFileFromInput();
+  });
+
   selectEl.addEventListener('change', async () => {
     selectedId = selectEl.value;
     await loadActivity(selectedId);
   });
+}
+
+async function loadNewActivitiesFromFrontend() {
+  if (!fitFileInputEl) {
+    setStatus('FIT input is not available in the page.', 'error');
+    return;
+  }
+
+  fitFileInputEl.click();
+}
+
+async function importFitFileFromInput() {
+  const selectedFile = fitFileInputEl?.files?.[0];
+  if (!selectedFile) {
+    return;
+  }
+
+  setLoadButtonsDisabled(true);
+
+  const previousSelectedId = selectedId;
+  try {
+    // Ask user for an activity name to attach to the imported FIT
+    const activityName = window.prompt('Activity name (will become the activity id):', selectedFile.name.replace(/\.fit$/i, '')) || '';
+
+    const payload = await uploadFitFile(selectedFile, activityName);
+
+    // Show backend message
+    if (payload && payload.success) {
+      setStatus(payload.success, 'success');
+    } else if (payload && payload.error) {
+      setStatus(payload.error, 'error');
+      throw new Error(payload.error);
+    } else {
+      setStatus('Unknown response from server', 'error');
+      throw new Error('Unknown response from server');
+    }
+
+    await loadActivities();
+
+    // Prefer selecting the newly imported activity (activityName) when available
+    if (activityName && activities.some((activity) => activity.id === activityName)) {
+      selectedId = activityName;
+      selectEl.value = activityName;
+      await loadActivity(activityName);
+    } else if (previousSelectedId && activities.some((activity) => activity.id === previousSelectedId)) {
+      selectedId = previousSelectedId;
+      selectEl.value = previousSelectedId;
+      await loadActivity(previousSelectedId);
+    }
+
+  } catch (error) {
+    setStatus(`Failed to import FIT file: ${error.message}`, 'error');
+  } finally {
+    setLoadButtonsDisabled(false);
+    if (fitFileInputEl) {
+      fitFileInputEl.value = '';
+    }
+  }
+}
+
+function setLoadButtonsDisabled(disabled) {
+  if (loadNewActivitiesHeaderBtnEl) {
+    loadNewActivitiesHeaderBtnEl.disabled = disabled;
+  }
+}
+
+async function uploadFitFile(file, activityName = '') {
+  const response = await fetch(IMPORT_FIT_ROUTE, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/octet-stream',
+      'X-Activity-Name': activityName
+    },
+    body: await file.arrayBuffer()
+  });
+
+  const payload = await parseApiResponse(response);
+
+  // Respect backend payload messages for success/error
+  if (response.ok) {
+    return payload;
+  }
+
+  // Non-OK: show backend error if available
+  if (payload && payload.error) {
+    return payload;
+  }
+
+  // Fallback
+  return { error: `HTTP ${response.status}` };
+}
+
+async function refreshAllDataFromNotification(refreshSignal) {
+  if (isRefreshingAllData) {
+    refreshQueued = true;
+    return;
+  }
+
+  isRefreshingAllData = true;
+  setStatus(`Refresh requested (signal: ${Number(refreshSignal).toFixed(3)}).`, 'success');
+
+  try {
+    const previousSelectedId = selectedId;
+    await loadActivities();
+
+    if (previousSelectedId && activities.some((activity) => activity.id === previousSelectedId)) {
+      selectedId = previousSelectedId;
+      selectEl.value = previousSelectedId;
+      await loadActivity(previousSelectedId);
+    }
+  } catch (error) {
+    setStatus(`Refresh failed: ${error.message}`, 'error');
+  } finally {
+    isRefreshingAllData = false;
+    if (refreshQueued) {
+      refreshQueued = false;
+      await refreshAllDataFromNotification(Date.now() / 1000);
+    }
+  }
+}
+
+async function refreshActivitiesFromNotification() {
+  await loadActivities();
+}
+
+async function refreshUserProfileFromNotification() {
+  try {
+    await getUserProfile();
+    if (!profileModalEl?.classList.contains('is-hidden')) {
+      await preloadUserProfile();
+    }
+    await refreshHrZones();
+  } catch (error) {
+    setStatus(`Profile refresh failed: ${error.message}`, 'error');
+  }
+}
+
+async function refreshSegmentsFromNotification() {
+  if (selectedId) {
+    await loadActivity(selectedId);
+  }
 }
 
 function initProfileModal() {
@@ -227,6 +388,14 @@ async function loadActivity(activityId) {
     safeRenderStep('km splits', () => renderKmSplitsGrid(kmSplits));
     safeRenderStep('hr zones', () => renderZones(zones));
     setStatus(`Loaded activity: ${activityId}`, 'success');
+
+    // Fetch additional activity-specific data (elevation for bikes, vertical ratio for runs)
+    try {
+      await initActivitySpecificData(summary, encodedId);
+    } catch (err) {
+      // non-fatal
+      console.debug('No extra activity data:', err.message || err);
+    }
   } catch (error) {
     setStatus(`Failed to load activity ${activityId}: ${error.message}`, 'error');
   }
@@ -348,6 +517,88 @@ function renderSummary(summary) {
       </div>
     `)
     .join('');
+}
+
+function getOrCreateExtraCardsContainer() {
+  let container = document.getElementById('activity-extra-cards');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'activity-extra-cards';
+    container.style.marginTop = '0.75rem';
+    summaryEl.appendChild(container);
+  }
+  container.innerHTML = '';
+  return container;
+}
+
+async function initActivitySpecificData(summary, encodedId) {
+  const isBike = isCyclingSport(summary.sportType);
+  const isRun = isRunningSport(summary.sportType);
+  const container = getOrCreateExtraCardsContainer();
+
+  if (isBike) {
+    const payload = await fetchJsonOptional(`${ACTIVITIES_BASE}/${encodedId}/elevation`);
+    renderElevation(payload, container);
+  } else if (isRun) {
+    const payload = await fetchJsonOptional(`${ACTIVITIES_BASE}/${encodedId}/vertical-ratio`);
+    renderVerticalRatio(payload, container);
+  } else {
+    // nothing to show for other sports
+  }
+}
+
+function createCard(label, value) {
+  return `
+    <div class="card">
+      <div class="label">${escapeHtml(label)}</div>
+      <div class="value">${escapeHtml(value)}</div>
+    </div>`;
+}
+
+function renderElevation(payload, container) {
+  if (!container) return;
+  if (!payload || typeof payload !== 'object') {
+    // no data
+    return;
+  }
+
+  // Prefer known keys
+  const cards = [];
+  if (payload.totalAscent != null) cards.push(createCard('Total Ascent (m)', formatNumber(payload.totalAscent, ' m')));
+  if (payload.totalDescent != null) cards.push(createCard('Total Descent (m)', formatNumber(payload.totalDescent, ' m')));
+  if (payload.avgGradient != null) cards.push(createCard('Avg Gradient (%)', formatNumber(payload.avgGradient, ' %')));
+  if (payload.avgAscentPerKm != null) cards.push(createCard('Avg Ascent / km (m)', formatNumber(payload.avgAscentPerKm, ' m')));
+
+  // Fallback: list numeric properties
+  if (cards.length === 0) {
+    for (const [k, v] of Object.entries(payload)) {
+      if (v == null) continue;
+      if (typeof v === 'number') cards.push(createCard(k, formatNumber(v)));
+      else cards.push(createCard(k, String(v)));
+    }
+  }
+
+  container.innerHTML = cards.join('');
+}
+
+function renderVerticalRatio(payload, container) {
+  if (!container) return;
+  if (!payload || typeof payload !== 'object') return;
+
+  const cards = [];
+  if (payload.verticalRatio != null) cards.push(createCard('Vertical Ratio', formatNumber(payload.verticalRatio, '')));
+  if (payload.avgAscentPerKm != null) cards.push(createCard('Avg Ascent / km (m)', formatNumber(payload.avgAscentPerKm, ' m')));
+  if (payload.totalAscent != null) cards.push(createCard('Total Ascent (m)', formatNumber(payload.totalAscent, ' m')));
+
+  if (cards.length === 0) {
+    for (const [k, v] of Object.entries(payload)) {
+      if (v == null) continue;
+      if (typeof v === 'number') cards.push(createCard(k, formatNumber(v)));
+      else cards.push(createCard(k, String(v)));
+    }
+  }
+
+  container.innerHTML = cards.join('');
 }
 
 function renderSportTheme(sportType) {

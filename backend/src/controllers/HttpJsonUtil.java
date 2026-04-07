@@ -17,7 +17,7 @@ public final class HttpJsonUtil {
     private static void addCors(Headers headers) {
         headers.set("Access-Control-Allow-Origin", "*");
         headers.set("Access-Control-Allow-Methods", "GET, OPTIONS, POST");
-        headers.set("Access-Control-Allow-Headers", "Content-Type");
+        headers.set("Access-Control-Allow-Headers", "Content-Type, X-Activity-Name");
         headers.set("Content-Type", "application/json; charset=utf-8");
     }
 

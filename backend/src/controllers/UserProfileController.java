@@ -24,6 +24,7 @@ public class UserProfileController extends AbstractController {
 
 			UserProfileDto dto = readBody(exchange, UserProfileDto.class);
 
+			// Do not catch error, it will be handled at AbstractController level
 			userProfileService.setUserProfile(dto);
 
 			return ok("User profile updated");

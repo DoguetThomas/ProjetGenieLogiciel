@@ -9,21 +9,22 @@ import model.ActivityImpl;
 import model.ActivityModel;
 import model.UserImpl;
 
-public class StravaAnalyticsServiceImpl implements AnalyticsService{
+public class StravaAnalyticsServiceImpl implements AnalyticsService {
     private List<ActivityModel> activities;
     private Traitement traitement;
 
-    public StravaAnalyticsServiceImpl(){
+    public StravaAnalyticsServiceImpl() {
         this.activities = new ArrayList<>();
         this.traitement = new Traitement("../data/strava.csv", new UserImpl(1, true, 0, 0));
         this.activities = this.traitement.getActivities();
     }
+
     @Override
-    public AllActivitiesDto getAllActivities(){
+    public AllActivitiesDto getAllActivities() {
         AllActivitiesDto allActivitiesDto = new AllActivitiesDto(new ArrayList<>());
-       List<ActivityDto> activitiesDto = new ArrayList<>();
-        for (ActivityModel activity : this.activities){
-            if (activity !=null ){
+        List<ActivityDto> activitiesDto = new ArrayList<>();
+        for (ActivityModel activity : this.activities) {
+            if (activity != null) {
                 ActivityTypeDto sport = this.determineSport(activity);
 
                 allActivitiesDto.addActivity(activity.getId(), sport, activity.getDistance());
@@ -32,7 +33,7 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
         return allActivitiesDto;
     }
 
-    private static ActivityTypeDto determineSport(ActivityModel activity){
+    private static ActivityTypeDto determineSport(ActivityModel activity) {
         if ("BIKE".equals(activity.getSport())) {
             return ActivityTypeDto.BIKE;
         } else {
@@ -49,7 +50,7 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
         for (ActivityModel activity : this.activities) {
             if (activity != null && id.equals(activity.getId())) {
                 ActivityTypeDto sport = determineSport(activity);
-                double distanceKm = (activity.getDistance() != null) ? activity.getDistance(): 0.0;
+                double distanceKm = (activity.getDistance() != null) ? activity.getDistance() : 0.0;
                 int maxHrInt = (activity.getMaxHR() != null) ? activity.getMaxHR().intValue() : 0;
                 double avgHr = (activity.getAvgHR() != null) ? activity.getAvgHR() : 0.0;
                 double avgSpeed = (activity.getAvgSpeed() != null) ? activity.getAvgSpeed() : 0.0;
@@ -63,8 +64,7 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
                         maxHrInt,
                         avgSpeed,
                         avgPace,
-                        avgPower
-                );
+                        avgPower);
             }
         }
         return null;
