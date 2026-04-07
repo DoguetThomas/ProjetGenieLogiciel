@@ -55,13 +55,13 @@ public interface ActivityModel {
      * Récupère la durée totale de l'activité.
      * * @return La durée de l'activité.
      */
-    public Double getDuration(Double id);
+    public int getDuration();
 
     /**
      * Définit la durée totale de l'activité.
      * * @param duration La nouvelle durée de l'activité.
      */
-    public void setDuration(Double duration);
+    public void setDuration(int duration);
 
     /**
      * Récupère la puissance moyenne développée pendant l'activité.
@@ -115,61 +115,61 @@ public interface ActivityModel {
      * Récupère le temps passé dans la zone d'entraînement 1 (TZ1).
      * * @return Le temps en zone 1.
      */
-    public Double getTz1();
+    public int getTz1();
 
     /**
      * Définit le temps passé dans la zone d'entraînement 1 (TZ1).
      * * @param TZ1 Le nouveau temps en zone 1.
      */
-    public void setTz1(Double tz1);
+    public void setTz1(int tz1);
 
     /**
      * Récupère le temps passé dans la zone d'entraînement 2 (TZ2).
      * * @return Le temps en zone 2.
      */
-    public Double getTz2();
+    public int getTz2();
 
     /**
      * Définit le temps passé dans la zone d'entraînement 2 (TZ2).
      * * @param TZ2 Le nouveau temps en zone 2.
      */
-    public void setTz2(Double tz2);
+    public void setTz2(int tz2);
 
     /**
      * Récupère le temps passé dans la zone d'entraînement 3 (TZ3).
      * * @return Le temps en zone 3.
      */
-    public Double getTz3();
+    public int getTz3();
 
     /**
      * Définit le temps passé dans la zone d'entraînement 3 (TZ3).
      * * @param TZ3 Le nouveau temps en zone 3.
      */
-    public void setTz3(Double tz3);
+    public void setTz3(int tz3);
 
     /**
      * Récupère le temps passé dans la zone d'entraînement 4 (TZ4).
      * * @return Le temps en zone 4.
      */
-    public Double getTz4();
+    public int getTz4();
 
     /**
      * Définit le temps passé dans la zone d'entraînement 4 (TZ4).
      * * @param TZ4 Le nouveau temps en zone 4.
      */
-    public void setTz4(Double tz4);
+    public void setTz4(int tz4);
 
     /**
      * Récupère le temps passé dans la zone d'entraînement 5 (TZ5).
      * * @return Le temps en zone 5.
      */
-    public Double getTz5();
+    public int getTz5();
 
     /**
      * Définit le temps passé dans la zone d'entraînement 5 (TZ5).
      * * @param TZ5 Le nouveau temps en zone 5.
      */
-    public void setTz5(Double tz5);
+    public void setTz5(int tz5);
 
 
 }

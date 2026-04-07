@@ -1,4 +1,5 @@
 package model;
+import java.util.List;
 
 public class ActivityImpl implements ActivityModel{
     private String id;
@@ -15,8 +16,11 @@ public class ActivityImpl implements ActivityModel{
     private int tz3;
     private int tz4;
     private int tz5;
+    private List<GpsPoint> route;
+    private List<Integer>splits ;
 
-    public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, int tz1, int tz2, int tz3, int tz4, int tz5) {
+
+    public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, int tz1, int tz2, int tz3, int tz4, int tz5, List<GpsPoint> route, List<Integer>splits) {
         this.id = id;
         this.distance = distance;
         this.avgSpeed = avgSpeed;
@@ -31,156 +35,163 @@ public class ActivityImpl implements ActivityModel{
         this.tz3 = tz3;
         this.tz4 = tz4;
         this.tz5 = tz5;
+        this.route = route;
+        this.splits = splits;
+
     }
 
+    public ActivityImpl() {
+    }
 
     @Override
     public String getId() {
-        return "";
+        return id;
     }
 
     @Override
     public void setId(String id) {
-
+        this.id = id;
     }
 
     @Override
     public Double getDistance() {
-        return 0.0;
+        return distance;
     }
-
 
     @Override
     public void setDistance(Double distance) {
-
+        this.distance = distance;
     }
 
     @Override
     public Double getAvgSpeed() {
-        return 0.0;
+        return avgSpeed;
     }
-
 
     @Override
     public void setAvgSpeed(Double avgSpeed) {
-
+        this.avgSpeed = avgSpeed;
     }
 
     @Override
     public String getSport() {
-        return "";
+        return sport;
     }
-
 
     @Override
     public void setSport(String sport) {
-
+        this.sport = sport;
     }
 
     @Override
-    public Double getDuration(Double id) {
-        return 0.0;
+    public int getDuration() {
+        return duration;
     }
 
-    @Override
-    public void setDuration(Double duration) {
-
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     @Override
     public Double getAvgPower() {
-        return 0.0;
+        return avgPower;
     }
 
     @Override
     public void setAvgPower(Double avgPower) {
-
+        this.avgPower = avgPower;
     }
 
     @Override
     public Double getAvgHR() {
-        return 0.0;
+        return avgHR;
     }
-
 
     @Override
     public void setAvgHR(Double avgHR) {
-
+        this.avgHR = avgHR;
     }
 
     @Override
     public Double getMaxHR() {
-        return 0.0;
+        return maxHR;
     }
-
 
     @Override
     public void setMaxHR(Double maxHR) {
-
+        this.maxHR = maxHR;
     }
 
     @Override
     public Double getAvgPace() {
-        return 0.0;
+        return avgPace;
     }
 
     @Override
     public void setAvgPace(Double avgPace) {
-
+        this.avgPace = avgPace;
     }
 
     @Override
-    public Double getTz1() {
-        return 0.0;
+    public int getTz1() {
+        return tz1;
     }
 
-
-    @Override
-    public void setTz1(Double tz1) {
-
-    }
-
-    @Override
-    public Double getTz2() {
-        return 0.0;
-    }
-
-
-    @Override
-    public void setTz2(Double tz2) {
-
+    public void setTz1(int tz1) {
+        this.tz1 = tz1;
     }
 
     @Override
-    public Double getTz3() {
-        return 0.0;
+    public int getTz2() {
+        return tz2;
     }
 
-
-    @Override
-    public void setTz3(Double tz3) {
-
-    }
-
-    @Override
-    public Double getTz4() {
-        return 0.0;
-    }
-
-
-    @Override
-    public void setTz4(Double tz4) {
-
+    public void setTz2(int tz2) {
+        this.tz2 = tz2;
     }
 
     @Override
-    public Double getTz5() {
-        return 0.0;
+    public int getTz3() {
+        return tz3;
+    }
+
+    public void setTz3(int tz3) {
+        this.tz3 = tz3;
+    }
+
+    @Override
+    public int getTz4() {
+        return tz4;
+    }
+
+    public void setTz4(int tz4) {
+        this.tz4 = tz4;
+    }
+
+    @Override
+    public int getTz5() {
+        return tz5;
+    }
+
+    public void setTz5(int tz5) {
+        this.tz5 = tz5;
+    }
+
+    public List<GpsPoint> getRoute() {
+        return this.route;
+    }
+
+    public void setRoute(List<GpsPoint> route) {
+        this.route = route;
     }
 
 
-    @Override
-    public void setTz5(Double tz5) {
+    public List<Integer> getSplits() {
+        return this.splits;
+    }
+
+    public void setSplits(List<Integer> splits) {
+        this.splits = splits;
 
     }
 
