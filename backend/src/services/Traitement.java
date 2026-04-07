@@ -412,7 +412,11 @@ public class Traitement {
      * Transforme les données triées par activité en une liste d'objets ActivityModel
      * * @return La liste de toutes les activités prêtes à être affichées.
      */
-    /*public List<ActivityModel> getActivities() {
+    /**
+     * Transforme les données triées par activité en une liste d'objets ActivityModel
+     * * @return La liste de toutes les activités prêtes à être affichées.
+     */
+    public List<ActivityModel> getActivities() {
         List<ActivityModel> activityList = new ArrayList<>();
 
         // vérifie si les données sont bien chargées
@@ -442,7 +446,7 @@ public class Traitement {
         }
 
         return activityList;
-    }*/
+    }
 
     /**
      * Convertit les coordonnées brutes en données GPS classiques
