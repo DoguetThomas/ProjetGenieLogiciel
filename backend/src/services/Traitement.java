@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import model.Split;
 
 public class Traitement {
     private List<StravaRecord> records;
@@ -309,11 +310,98 @@ public class Traitement {
         return avgPower;
     }
 
-    /*il faut qu'on détermine comment représenter le Split
-    public ??? getSplit(){
-        return null;
-    }
+
+    /**
+     * Découpe l'activité kilomètre par kilomètre pour générer une liste de splits
+     * Calcule automatiquement la durée et la fréquence cardiaque moyenne pour chaque tranche de 1000 mètres.
+     *
+     * @param id L'identifiant unique de l'activité
+     * @return Une liste d'objets Split contenant les statistiques de chaque kilomètre
      */
+    public List<Split> getSplits(String id) {
+
+        List<Split> splits = new ArrayList<>();
+
+        if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
+            return splits;
+        }
+
+        // Récupération de toutes les lignes de l'activité demandée
+        List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
+
+        // la liste de points est-elle bien remplie ?
+        if (recordsForActivity == null || recordsForActivity.isEmpty()) {
+            return splits;
+        }
+
+        // découpage kilométrique
+        double nextKmMarker = 1000.0; // Distance en mètres
+        int kmIndex = 1;              // Le numéro du kilomètre
+
+        // pour calculer la moyenne cardiaque spécifique au kilomètre en cours
+        double splitTotalHR = 0.0;    // Somme des battements cardiaques du kilomètre actuel
+        int splitHRCount = 0;         // Nombre de points cardio valides lus dans ce kilomètre
+
+        // Recherche de l'heure exacte de départ de l'activité
+        LocalDateTime lastSplitTime = null;
+        for (StravaRecord r : recordsForActivity) {
+            if (r.getTimestamp() != null) {
+                lastSplitTime = r.getTimestamp(); // Dès qu'on trouve un temps valide, on le garde
+                break;
+            }
+        }
+
+        // Si aucun temps n'a été trouvé dans tout le fichier
+        if (lastSplitTime == null) {
+            return splits;
+        }
+
+        // Début du parcours de tous les points de l'activité
+        for (StravaRecord record : recordsForActivity) {
+
+            // Extraction des données de la ligne actuelle
+            Double currentDist = record.getDistance();
+            LocalDateTime currentTime = record.getTimestamp();
+            Double hr = record.getHeartRate();
+
+            // Traitement de la fréquence cardiaque, on l'ajoute au total si elle est valide (> 0)
+            if (hr != null && hr > 0) {
+                splitTotalHR += hr;
+                splitHRCount++;
+            }
+
+            if (currentDist != null && currentTime != null) {
+
+                // Si la distance cumulée dépasse ou égale notre marqueur (ex: on passe à 1002 mètres)
+                if (currentDist >= nextKmMarker) {
+
+                    // Calcul du temps écoulé (en secondes) depuis le dernier kilomètre
+                    int splitSeconds = (int) Duration.between(lastSplitTime, currentTime).getSeconds();
+
+                    // Calcul de la moyenne cardiaque de ce kilomètre
+                    int avgHR = 0;
+                    if (splitHRCount > 0) {
+                        avgHR = (int) Math.round(splitTotalHR / splitHRCount);
+                    }
+
+                    // Création de l'objet Split et ajout au résultat final
+                    splits.add(new Split(kmIndex, splitSeconds, avgHR));
+
+                    // Réinitialisation des variables pour préparer le kilomètre suivant
+                    lastSplitTime = currentTime;   // Le point actuel devient le point de départ du prochain km
+                    nextKmMarker += 1000.0;        // On repousse la ligne d'arrivée de 1000 mètres (ex: 2000.0)
+                    kmIndex++;                     // On passe au kilomètre numéro 2
+
+                    // On remet les compteurs cardiaques à zéro pour ne pas fausser la prochaine moyenne
+                    splitTotalHR = 0.0;
+                    splitHRCount = 0;
+                }
+            }
+        }
+        // On retourne la liste complète contenant tous les kilomètres analysés
+        return splits;
+    }
+
 
     private Double[] calculateTimeInZones() {
         return null;
@@ -404,9 +492,6 @@ public class Traitement {
 
         return route;
     }
-
-
-
 
 }
 
