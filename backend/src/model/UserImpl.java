@@ -10,7 +10,7 @@ public class UserImpl implements UserModel{
     private double height;
     private double weight;
     private double maxHRUser;
-    private ArrayList seuilZoneHR;
+    private ArrayList<Double> seuilZoneHR;
 
 
     public UserImpl(int age, boolean genre, double height, double weight) {
@@ -18,47 +18,47 @@ public class UserImpl implements UserModel{
         this.genre = genre;
         this.height = height;
         this.weight = weight;
-
     }
 
     @Override
-    public int getAge(int age) {
-        return 0;
+    public int getAge() {
+        return age;
     }
 
     @Override
     public void setAge(int age) {
+        this.age = age;
 
     }
 
     @Override
-    public boolean getGenre(boolean genre) {
-        return false;
+    public boolean getGenre() {
+        return genre;
     }
 
     @Override
     public void setGenre(boolean genre) {
-
+        this.genre = genre;
     }
 
     @Override
     public double getHeight() {
-        return 0;
+        return height;
     }
 
     @Override
     public void setHeight(double height) {
-
+        this.height = height;
     }
 
     @Override
     public double getWeight() {
-        return 0;
+        return weight;
     }
 
     @Override
     public void setWeight(double weight) {
-
+        this.weight = weight;
     }
 
     /**
@@ -92,23 +92,24 @@ public class UserImpl implements UserModel{
 
     /**
      * Définit les 4 seuils de HR pour séparer les 5 zones de HR de Garmin en format liste
-     * @param maxHRUser de l'utilisateur //TODO
+     * @param maxHRUser de l'utilisateur
      */
-    @Override
     public void setSeuilZoneHR(double maxHRUser) {
-
+        seuilZoneHR = new ArrayList<>();
+        seuilZoneHR.add(maxHRUser * 0.60); // seuil Z1/Z2
+        seuilZoneHR.add(maxHRUser * 0.70); // seuil Z2/Z3
+        seuilZoneHR.add(maxHRUser * 0.80); // seuil Z3/Z4
+        seuilZoneHR.add(maxHRUser * 0.90); // seuil Z4/Z5
     }
 
     /**
      * Récupère les 4 seuils de HR pour séparer les 5 zones de HR de Garmin
-     * @return SeuilZoneHR //TODO
+     * @return SeuilZoneHR
      */
     @Override
-    public ArrayList getSeuilZoneHR() {
-        seuilZoneHR = null;
+    public ArrayList<Double> getSeuilZoneHR() {
         return seuilZoneHR;
     }
-
 
     @Override
     public String toString() {
@@ -118,6 +119,7 @@ public class UserImpl implements UserModel{
                 ", height=" + height +
                 ", weight=" + weight +
                 ", maxHRUser=" + maxHRUser +
+                ", seuilZoneHR=" + seuilZoneHR +
                 '}';
     }
 }

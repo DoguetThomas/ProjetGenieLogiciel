@@ -8,7 +8,7 @@ public interface UserModel {
      * Récupère l'âge de l'utilisateur.
      * @return L'âge de l'utilisateur en années.
      */
-    public int getAge(int age);
+    public int getAge();
 
     /**
      * Définit l'âge de l'utilisateur.
@@ -20,7 +20,7 @@ public interface UserModel {
      * Récupère l'état de l'attribut booléen genre.
      * @return La valeur booléenne de l'attribut genre.
      */
-    public boolean getGenre(boolean genre);
+    public boolean getGenre();
 
     /**
      * Définit l'état de l'attribut booléen genre.
@@ -77,7 +77,7 @@ public interface UserModel {
      * @return seuilZoneHR
      */
 
-    public ArrayList getSeuilZoneHR();
+    public ArrayList<Double> getSeuilZoneHR();
 
 
 
