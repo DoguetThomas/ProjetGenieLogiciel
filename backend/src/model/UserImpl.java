@@ -15,7 +15,7 @@ public class UserImpl implements UserModel{
     }
 
     @Override
-    public int getAge(int age) {
+    public int getAge() {
         return 0;
     }
 
@@ -25,7 +25,7 @@ public class UserImpl implements UserModel{
     }
 
     @Override
-    public boolean getGenre(boolean genre) {
+    public boolean getGenre() {
         return false;
     }
 
