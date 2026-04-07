@@ -13,7 +13,7 @@ public class ActivityImpl implements ActivityModel{
     private Double avgPace;
     private List<Integer> zoneHR;
     private List<GpsPoint> route;
-    private List<Integer>splits ;
+    private List<Split>split ;
 
 
     public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, List<Integer> zoneHR, List<GpsPoint> route, List<Split>splits) {
