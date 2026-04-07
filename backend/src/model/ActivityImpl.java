@@ -40,6 +40,9 @@ public class ActivityImpl implements ActivityModel{
 
     }
 
+    public ActivityImpl() {
+    }
+
     @Override
     public String getId() {
         return id;
