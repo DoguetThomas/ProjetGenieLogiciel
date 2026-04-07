@@ -404,10 +404,9 @@ public class Traitement {
 
     /**
      * Calcul le temps dans les zones en seconde
-     * @param id
      * @return Arraylist de 5 int pour les 5 zones.
      */
-    private Double[] calculateTimeInZones(String id) {
+    private ArrayList<Integer> calculateTimeInZones(String id) {
         if (this.sortedRecords == null) {
             return null;
         }
@@ -421,7 +420,7 @@ public class Traitement {
 
         // On créer des durations par zones
         int zt1 = 0, zt2 = 0, zt3 = 0, zt4 = 0, zt5 = 0;
-        ArrayList<Double> zoneHR = UserModel.getSeuilZoneHR();
+        ArrayList<Double> zoneHR = user.getSeuilZoneHR();
 
         for (StravaRecord record : recordsForActivity) {
             Double HR = record.getHeartRate();
@@ -448,8 +447,14 @@ public class Traitement {
 
         // On ajoute tous les int duration zone dans un array qu'on renvoie
 
+        ArrayList<Integer> durations = new ArrayList<>();
+        durations.add(zt1);
+        durations.add(zt2);
+        durations.add(zt3);
+        durations.add(zt4);
+        durations.add(zt5);
 
-        return null;
+        return durations;
     }
 
 
