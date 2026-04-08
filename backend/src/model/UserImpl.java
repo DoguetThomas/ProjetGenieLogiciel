@@ -11,6 +11,8 @@ public class UserImpl implements UserModel{
     private double maxHRUser;
     private ArrayList<Double> seuilZoneHR;
 
+    public UserImpl(){
+    }
 
     public UserImpl(int age, boolean genre, double height, double weight) {
         this.age = age;

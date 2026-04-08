@@ -24,18 +24,7 @@ public class UserSession {
      * @return l'instance unique et partagée de {@link UserModel}
      */
     public static UserModel getInstance() {
-        if (instance == null) {
-            // Création de l'utilisateur avec les valeurs par défaut
-            UserImpl user = new UserImpl(23, true, 177, 77);
-
-            // Calcul de la FCmax théorique selon la formule age/genre
-            user.setMaxHRUser(23, true);
-
-            // Calcul des 4 seuils qui délimitent les 5 zones cardiaques Garmin
-            user.setSeuilZoneHR(user.getMaxHRUser());
-
-            instance = user;
-        }
         return instance;
     }
+
 }

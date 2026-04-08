@@ -206,7 +206,7 @@ public class Traitement {
     private Double getAvgPace(String id) {
         double distanceKm = this.getDist(id);
         Integer duration = this.getDuration(id);
-
+        double speed = this.getAvgSpeed(id);
         // éviter la division par 0
         if (distanceKm <= 0) {
             return 0.0;
@@ -421,7 +421,7 @@ public class Traitement {
      */
 
     public ArrayList<Integer> getTimeInZones(String id) {
-        if (this.sortedRecords == null) {
+        if (this.sortedRecords == null || this.user == null) {
             return null;
         }
         // On récupère la liste des points pour l'activité ciblée par l'ID
