@@ -61,7 +61,7 @@ public abstract class AbstractController implements HttpHandler {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    HttpJsonUtil.sendJson(exchange, 500, error("Internal server error"));
+                    HttpJsonUtil.sendJson(exchange, 500, error(e.getMessage()));
                     return;
                 }
             }
@@ -166,7 +166,7 @@ public abstract class AbstractController implements HttpHandler {
         return "{\"success\":\"" + msg + "\"}";
     }
 
-    protected String error(String msg) {
+    private String error(String msg) {
         return "{\"error\":\"" + msg + "\"}";
     }
 

@@ -12,7 +12,7 @@ import java.util.TreeMap;
 import exceptions.ActivityNotFoundException;
 import model.*;
 
-public class StravaAnalyticsServiceImpl implements AnalyticsService{
+public class StravaAnalyticsServiceImpl implements AnalyticsService {
     private List<ActivityModel> activities;
     private final Traitement traitement;
 
@@ -51,7 +51,7 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
      * * @return AllActivitiesDto Un objet contenant la liste des activités simplifiées (id, sport, distance).
      */
     @Override
-    public AllActivitiesDto getAllActivities(){
+    public AllActivitiesDto getAllActivities() {
         AllActivitiesDto allActivitiesDto = new AllActivitiesDto(new ArrayList<>());
         for (ActivityModel activity : this.activities){
             if (activity !=null ){
