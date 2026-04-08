@@ -102,8 +102,7 @@ Routes backend associées :
 
 Le milestone 2 est considéré comme réussi si :
 
-0. Les critères de validation du premier milestone sont toujours validés
-1. Le serveur charge les données JSON des segments
+1. Les critères de validation du premier milestone sont toujours validés
 2. Le dénivelé positif des activités vélo est correctement calculé et exposé
 3. Le rapport vertical moyen est calculé pour les activités de course à pied et exploitable dans l'interface
 4. Une synchronisation FIT Strava réussie crée l'activité attendue
