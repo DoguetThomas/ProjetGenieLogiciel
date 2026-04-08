@@ -19,6 +19,8 @@ public class StravaRecord {
     private Double positionLong;
     private LocalDateTime timestamp;
 
+    public StravaRecord(){};
+
     public StravaRecord(Double airPower, Double formPower, Double groundTime, Double legSpringStiffness, Double power, Double verticalOscillation, Double cadence, String datafile, Double distance, Double enhancedAltitude, Double enhancedSpeed, Double heartRate, Double positionLat, Double positionLong, LocalDateTime timestamp) {
         this.airPower = airPower;
         this.formPower = formPower;
