@@ -212,7 +212,7 @@ public class Traitement {
             return 0.0;
         }
 
-        return (duration/60) / distanceKm;
+        return (duration/60.0) / distanceKm;
     }
 
     /**
@@ -570,7 +570,7 @@ public class Traitement {
         List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
 
         for (StravaRecord record : recordsForActivity) {
-            Number pointsMetric = 0;
+            Number pointsMetric = null;
             if (Objects.equals(metric, "Altitude")){
                 pointsMetric = record.getEnhancedAltitude();
             }
@@ -590,7 +590,10 @@ public class Traitement {
                 pointsMetric = record.getGroundTime();
             }
 
-            res.put(record.getTimestamp(), pointsMetric);
+            // Ne pas ajouter si la valeur est absente pour cette activité
+            if (pointsMetric != null) {
+                res.put(record.getTimestamp(), pointsMetric);
+            }
         }
         return res;
     }
