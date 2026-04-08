@@ -28,8 +28,8 @@ public interface AnalyticsService {
 
     public MetricDto getMetricsGroundTime(String id) throws ActivityNotFoundException;
 
-    public PaceDto getMetricsPace(String id);
+    public PaceDto getMetricsPace(String id) throws ActivityNotFoundException;
 
-    public ZoneDto getMetricsZone(String id);
+    public ZoneDto getMetricsZone(String id) throws ActivityNotFoundException;
 
 }

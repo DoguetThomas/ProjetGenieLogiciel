@@ -34,6 +34,16 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
         this.activities = this.traitement.getActivities();
     }
 
+    private ActivityModel findActivityById(String id) throws ActivityNotFoundException {
+        if (id == null) throw new IllegalArgumentException("L'ID ne peut pas être null");
+
+        for (ActivityModel activity : this.activities) {
+            if (activity != null && id.equals(activity.getId())) {
+                return activity;
+            }
+        }
+        throw new ActivityNotFoundException("Activité inconnue pour l'id : " + id);
+    }
 
     /**
      * Récupère la liste complète des activités.
@@ -74,31 +84,25 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
      */
     @Override
     public SummaryDto getSummary(String id) throws ActivityNotFoundException {
-        if (id == null) {
-            return null;
-        }
-        for (ActivityModel activity : this.activities) {
-            if (activity != null && id.equals(activity.getId())) {
-                ActivityTypeDto sport = determineSport(activity);
-                double distanceKm = (activity.getDistance() != null) ? activity.getDistance(): 0.0;
-                int maxHrInt = (activity.getMaxHR() != null) ? activity.getMaxHR().intValue() : 0;
-                double avgHr = (activity.getAvgHR() != null) ? activity.getAvgHR() : 0.0;
-                double avgSpeed = (activity.getAvgSpeed() != null) ? activity.getAvgSpeed() : 0.0;
-                double avgPace = (activity.getAvgPace() != null) ? activity.getAvgPace() : 0.0;
-                double avgPower = (activity.getAvgPower() != null) ? activity.getAvgPower() : 0.0;
-                return new SummaryDto(
-                        sport,
-                        distanceKm,
-                        activity.getDuration(), // Déjà un int
-                        avgHr,
-                        maxHrInt,
-                        avgSpeed,
-                        avgPace,
-                        avgPower
-                );
-            }
-        }
-        throw new ActivityNotFoundException("Activité inconnue");
+        ActivityModel activity = findActivityById(id);
+        ActivityTypeDto sport = determineSport(activity);
+        double distanceKm = (activity.getDistance() != null) ? activity.getDistance(): 0.0;
+        int maxHrInt = (activity.getMaxHR() != null) ? activity.getMaxHR().intValue() : 0;
+        double avgHr = (activity.getAvgHR() != null) ? activity.getAvgHR() : 0.0;
+        double avgSpeed = (activity.getAvgSpeed() != null) ? activity.getAvgSpeed() : 0.0;
+        double avgPace = (activity.getAvgPace() != null) ? activity.getAvgPace() : 0.0;
+        double avgPower = (activity.getAvgPower() != null) ? activity.getAvgPower() : 0.0;
+
+        return new SummaryDto(
+                sport,
+                distanceKm,
+                activity.getDuration(), // Déjà un int
+                avgHr,
+                maxHrInt,
+                avgSpeed,
+                avgPace,
+                avgPower
+        );
     }
 
     /**
@@ -109,28 +113,14 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
      */
     @Override
     public RouteDto getRoute(String id) throws ActivityNotFoundException {
-        if (id == null) {
-            return null;
+        ActivityModel activity = findActivityById(id);
+        List<GpsPoint> pointsGps = activity.getRoute();
+        List<GeoDto> route = new ArrayList<>();
+        for (GpsPoint point : pointsGps){
+            route.add(new GeoDto(point.getLatitude(), point.getLongitude()));
         }
-
-        for (ActivityModel activity : this.activities) {
-            if (activity != null && id.equals(activity.getId())) {
-
-                // Création d'un tracé GPS fictif (Mock)
-                List<GpsPoint> pointsGps = activity.getRoute();
-                List<GeoDto> route = new ArrayList<>();
-                // Ajout de quelques points de coordonnées (Latitude, Longitude)
-                for (GpsPoint point : pointsGps){
-                    route.add(new GeoDto(point.getLatitude(), point.getLongitude()));
-                }
-
-
-                // Retourne le DTO de la route en lui passant uniquement la liste des points
-                return new RouteDto(route);
-            }
-        }
-        // Retourne null si aucune activité correspondante n'a été trouvée
-        throw new ActivityNotFoundException("Activité inconnue");
+        // Retourne le DTO de la route en lui passant uniquement la liste des points
+        return new RouteDto(route);
     }
 
     /**
@@ -141,21 +131,13 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
      * @throws ActivityNotFoundException Si aucune activité correspondante n'est trouvée.
      */
     private MetricDto getMetricData(String id, String metricName) throws ActivityNotFoundException {
-        if (id == null) {
-            return null;
+        ActivityModel activity = findActivityById(id);
+        ActivityTypeDto sport = determineSport(activity);
+        List<TimedValueDto> points = new ArrayList<>();
+        for (Map.Entry<String, Number> entry : this.traitement.getMetricList(activity.getId(), metricName).entrySet()){
+            points.add(new TimedValueDto(entry.getKey(), entry.getValue()));
         }
-        for (ActivityModel activity : this.activities) {
-            if (activity != null && id.equals(activity.getId())) {
-                ActivityTypeDto sport = determineSport(activity);
-                List<TimedValueDto> points = new ArrayList<>();
-                for (Map.Entry<String, Number> entry : this.traitement.getMetricList(activity.getId(), metricName).entrySet()){
-                    points.add(new TimedValueDto(entry.getKey(), entry.getValue()));
-                }
-
-                return new MetricDto(sport, metricName, points);
-            }
-        }
-        throw new ActivityNotFoundException("Activité inconnue");
+        return new MetricDto(sport, metricName, points);
     }
 
     /**
@@ -230,19 +212,15 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
      * @return PaceDto Un objet contenant la liste des temps intermédiaires, ou null si l'activité n'est pas trouvée.
      */
     @Override
-    public PaceDto getMetricsPace(String id) {
-        for (ActivityModel activity : this.activities) {
-            if (activity != null && id.equals(activity.getId())) {
-                List<SplitDto> liste = new ArrayList<>();
-                List<Split> splits= activity.getSplits();
-                for (Split split : splits){
-                    SplitDto splitDto = new SplitDto(split.getKm(), split.getDurationSeconds(), split.getAvgHeartRate());
-                    liste.add(splitDto);
-                }
-                return new PaceDto(liste);
-            }
+    public PaceDto getMetricsPace(String id) throws ActivityNotFoundException{
+        ActivityModel activity = findActivityById(id);
+        List<SplitDto> liste = new ArrayList<>();
+        List<Split> splits= activity.getSplits();
+        for (Split split : splits){
+            SplitDto splitDto = new SplitDto(split.getKm(), split.getDurationSeconds(), split.getAvgHeartRate());
+            liste.add(splitDto);
         }
-        return null;
+        return new PaceDto(liste);
     }
 
     /**
@@ -251,35 +229,22 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
      * @return les zones en pourcentage pour chaque zone d'intensité
      */
     @Override
-    public ZoneDto getMetricsZone(String id) {
-        if (id == null) {
-            return null;
+    public ZoneDto getMetricsZone(String id) throws ActivityNotFoundException {
+        ActivityModel activity = findActivityById(id);
+        List<Integer> rawZones = activity.getZoneHR();
+        if (rawZones == null || rawZones.isEmpty()) {
+            return new ZoneDto(new int[]{0, 0, 0, 0, 0});
         }
-
-        for (ActivityModel activity : this.activities) {
-            if (activity != null && id.equals(activity.getId())) {
-                List<Integer> rawZones = activity.getZoneHR();
-
-                if (rawZones == null || rawZones.isEmpty()) {
-                    return new ZoneDto(new int[]{0, 0, 0, 0, 0});
-                }
-
-                int total = 0;
-                for (int z : rawZones) {
-                    total += z;
-                }
-
-                int[] percentages = new int[rawZones.size()];
-                if (total > 0) {
-                    for (int i = 0; i < rawZones.size(); i++) {
-                        percentages[i] = (int) Math.round((rawZones.get(i) * 100.0) / total);
-                    }
-                }
-
-                return new ZoneDto(percentages);
+        int total = 0;
+        for (int z : rawZones) {
+            total += z;
+        }
+        int[] percentages = new int[rawZones.size()];
+        if (total > 0) {
+            for (int i = 0; i < rawZones.size(); i++) {
+                percentages[i] = (int) Math.round((rawZones.get(i) * 100.0) / total);
             }
         }
-        return null;
+        return new ZoneDto(percentages);
     }
-
 }
