@@ -19,6 +19,25 @@ public class StravaRecord {
     private Double positionLong;
     private LocalDateTime timestamp;
 
+    public StravaRecord(Double airPower, Double formPower, Double groundTime, Double legSpringStiffness, Double power, Double verticalOscillation, Double cadence, String datafile, Double distance, Double enhancedAltitude, Double enhancedSpeed, Double heartRate, Double positionLat, Double positionLong, LocalDateTime timestamp) {
+        this.airPower = airPower;
+        this.formPower = formPower;
+        this.groundTime = groundTime;
+        this.legSpringStiffness = legSpringStiffness;
+        this.power = power;
+        this.verticalOscillation = verticalOscillation;
+        this.cadence = cadence;
+        this.datafile = datafile;
+        this.distance = distance;
+        this.enhancedAltitude = enhancedAltitude;
+        this.enhancedSpeed = enhancedSpeed;
+        this.heartRate = heartRate;
+        this.positionLat = positionLat;
+        this.positionLong = positionLong;
+        this.timestamp = timestamp;
+    }
+
+
     @Override
     public String toString() {
         return "StravaRecord{" +
