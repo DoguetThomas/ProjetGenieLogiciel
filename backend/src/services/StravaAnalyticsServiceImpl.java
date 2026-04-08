@@ -240,30 +240,32 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
             return new ZoneDto(new int[]{0, 0, 0, 0, 0});
         }
 
-        // Délégation à Traitement qui contient déjà la logique
-        ArrayList<Integer> durations = traitement.getTimeInZones(id);
-
-        if (durations == null) {
-            return new ZoneDto(new int[]{0, 0, 0, 0, 0});
+        if (id == null) {
+            return null;
         }
 
-        // Calcul du total de points cardiaques toutes zones confondues
-        int total = durations.get(0) + durations.get(1) + durations.get(2) + durations.get(3) + durations.get(4);
+        for (ActivityModel activity : this.activities) {
+            if (activity != null && id.equals(activity.getId())) {
 
-        // si aucune donnée HR
-        if (total == 0) {
-            return new ZoneDto(new int[]{0, 0, 0, 0, 0});
+                ArrayList<Integer> rawZones = this.traitement.getTimeInZones(id);
+
+                // Calcul du total pour convertir en pourcentages
+                int total = 0;
+                for (int z : rawZones) {
+                    total += z;
+                }
+
+                // Conversion en pourcentages
+                int[] percentages = new int[rawZones.size()];
+                if (total > 0) {
+                    for (int i = 0; i < rawZones.size(); i++) {
+                        percentages[i] = (int) Math.round((rawZones.get(i) * 100.0) / total);
+                    }
+                }
+
+                return new ZoneDto(percentages);
+            }
         }
-
-        // Conversion de chaque duration en pourcentage arrondi
-        int[] zones = new int[]{
-                (int) Math.round(durations.get(0) * 100.0 / total),
-                (int) Math.round(durations.get(1) * 100.0 / total),
-                (int) Math.round(durations.get(2) * 100.0 / total),
-                (int) Math.round(durations.get(3) * 100.0 / total),
-                (int) Math.round(durations.get(4) * 100.0 / total)
-        };
-
-        return new ZoneDto(zones);
+        return null;
     }
 }
