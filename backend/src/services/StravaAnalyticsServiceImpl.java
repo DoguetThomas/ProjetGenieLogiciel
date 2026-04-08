@@ -17,13 +17,11 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
     private final Traitement traitement;
 
     /**
-     * Initialise le service analytique en utilisant l'instance partagée de
-     * l'utilisateur via {@link UserSession}.
-     *
-     * <p>Cela garantit que {@link Traitement} utilise le même {@link model.UserModel}
-     * que {@link StravaUserProfileServiceImpl}. Ainsi, si l'utilisateur met à jour
-     * son profil depuis le frontend, les seuils de zones cardiaques recalculés
-     * sont automatiquement pris en compte lors des prochains appels analytiques.</p>
+     * Initialise le service analytique en utilisant l'instance partagée de l'utilisateur via {@link UserSession}
+     * Cela garantit que {@link Traitement} utilise le même {@link model.UserModel}
+     * que {@link StravaUserProfileServiceImpl}.
+     * Si l'utilisateur met à jour son profil depuis le frontend, les seuils de zones cardiaques recalculés
+     * sont automatiquement pris en compte lors des prochains appels analytiques.
      */
 
 
