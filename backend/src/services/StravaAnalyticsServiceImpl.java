@@ -242,16 +242,19 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
         for (ActivityModel activity : this.activities) {
             if (activity != null && id.equals(activity.getId())) {
 
-                // Recalcul à chaque appel via Traitement qui utilise le UserModel partagé avec ses seuils à jour
                 ArrayList<Integer> rawZones = this.traitement.getTimeInZones(id);
 
-                // Calcul du total pour convertir en pourcentages
+                // rawZones peut être null si le profil utilisateur n'est pas
+                // encore configuré (seuils HR non calculés)
+                if (rawZones == null || rawZones.isEmpty()) {
+                    return new ZoneDto(new int[]{0, 0, 0, 0, 0});
+                }
+
                 int total = 0;
                 for (int z : rawZones) {
                     total += z;
                 }
 
-                // Variable de sortie
                 int[] percentages = new int[rawZones.size()];
                 if (total > 0) {
                     for (int i = 0; i < rawZones.size(); i++) {
