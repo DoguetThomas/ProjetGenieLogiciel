@@ -421,7 +421,7 @@ public class Traitement {
      */
 
     public ArrayList<Integer> getTimeInZones(String id) {
-        if (this.sortedRecords == null || this.user == null) {
+        if (this.sortedRecords == null || this.user == null || this.user.getSeuilZoneHR() == null) {
             return null;
         }
         // On récupère la liste des points pour l'activité ciblée par l'ID
@@ -503,7 +503,8 @@ public class Traitement {
             activity.setRoute(this.getRoute(id));
             activity.setSplits(this.getSplits(id));
             activity.setSport(this.determineSportType(id));
-            activity.setZoneHR(this.getTimeInZones(id));
+            List<Integer> zones = this.getTimeInZones(id);
+            activity.setZoneHR(zones != null ? zones : new ArrayList<>());
 
             // ajoute à la liste finale
             activityList.add(activity);

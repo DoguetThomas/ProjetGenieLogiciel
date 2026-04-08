@@ -27,6 +27,10 @@ public class StravaUserProfileServiceImpl implements UserProfileService {
 
     @Override
     public UserProfileDto getUserProfile() {
+        if (user == null || user.getAge() == 0) {
+            return null; // profil pas encore renseigné
+        }
+
         if (user != null) {
             GenderDto genre;
             if (!user.getGenre()) {
@@ -45,19 +49,15 @@ public class StravaUserProfileServiceImpl implements UserProfileService {
      * Met à jour le profil utilisateur et recalcule immédiatement les seuils
      * de zones cardiaques en fonction du nouvel âge et genre.
      *
-     * <p>Ce recalcul est indispensable : les zones HR dépendent de la FCmax
-     * théorique, qui elle-même dépend de l'âge et du genre. Sans ce recalcul,
-     * les zones retournées par {@link StravaAnalyticsServiceImpl#getMetricsZone}
-     * resteraient basées sur les anciennes valeurs.</p>
      *
      * @param userProfileDto les nouvelles données du profil venant du frontend
      */
 
     @Override
     public void setUserProfile(UserProfileDto userProfileDto) {
-        if (userProfileDto != null){
-            this.user = new UserImpl();
-        }
+        if (userProfileDto == null) return;
+
+        // Ne pas faire new UserImpl() — modifier le singleton en place
         this.user.setAge(userProfileDto.getAge());
         this.user.setWeight(userProfileDto.getWeight());
         this.user.setHeight(userProfileDto.getHeight());

@@ -1,5 +1,6 @@
 package launch;
 
+import model.UserImpl;
 import services.*;
 
 /**
@@ -20,6 +21,9 @@ public class ApplicationConfig {
     private ImportService importService;
 
     private ApplicationConfig() {
+        // UserSession reste null jusqu'à ce que l'utilisateur renseigne son profil
+        UserSession.setInstance(new UserImpl()); // UserImpl vide, tous les champs à 0/false
+
         this.analyticsService = new StravaAnalyticsServiceImpl();
         this.userProfileService = new StravaUserProfileServiceImpl();
     }
