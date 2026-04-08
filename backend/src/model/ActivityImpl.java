@@ -109,7 +109,7 @@ public class ActivityImpl implements ActivityModel{
     }
 
     @Override
-    public void setMaxHR(Double maxHR) {
+    public void setMaxHR(double maxHR) {
         this.maxHR = maxHR;
     }
 

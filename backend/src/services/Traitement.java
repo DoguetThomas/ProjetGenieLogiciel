@@ -247,10 +247,7 @@ public class Traitement {
             }
         }
         // Pour éviter la divison par 0
-        if (count == 0) {
-            return 0.0;
-        }
-        return totalHR / count;
+        return count > 0 ? totalHR / count : 0.0;
     }
 
     /**
@@ -316,10 +313,8 @@ public class Traitement {
             }
         }
         // Pour éviter la divison par 0
-        if (count == 0) {
-            return 0.0;
-        }
-        return totalPower / count;
+
+        return count > 0 ? totalPower / count : 0.0;
     }
 
 

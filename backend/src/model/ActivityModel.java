@@ -99,7 +99,7 @@ public interface ActivityModel {
      * Définit la fréquence cardiaque maximale de l'activité.
      * * @param maxHR La nouvelle fréquence cardiaque maximale.
      */
-    public void setMaxHR(Double maxHR);
+    public void setMaxHR(double maxHR);
 
     /**
      * Récupère l'allure moyenne (Pace) de l'activité.
