@@ -25,8 +25,6 @@ public class ActivitiesController extends AbstractController {
         this.analyticsService = analyticsService;
 
         this.enhancedAnalyticsService = enhancedAnalyticsService;
-        initMetrics();
-    }
 
     }
 
