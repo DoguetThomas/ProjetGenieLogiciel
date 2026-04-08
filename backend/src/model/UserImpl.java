@@ -10,6 +10,8 @@ public class UserImpl implements UserModel{
     private double weight;
     private double maxHRUser;
     private ArrayList<Double> seuilZoneHR;
+    private boolean profileConfigured = false;
+
 
     public UserImpl(){
     }
@@ -28,7 +30,12 @@ public class UserImpl implements UserModel{
     @Override
     public void setAge(int age) {
         this.age = age;
+        this.profileConfigured = true; // profil touché au moins une fois
 
+    }
+
+    public boolean isProfileConfigured() {
+        return profileConfigured;
     }
 
     @Override

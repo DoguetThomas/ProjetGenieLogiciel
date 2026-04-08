@@ -27,9 +27,11 @@ public class StravaUserProfileServiceImpl implements UserProfileService {
 
     @Override
     public UserProfileDto getUserProfile() {
-        if (user == null || user.getAge() == 0) {
-            return null; // profil pas encore renseigné
+        if (user == null || !((UserImpl) user).isProfileConfigured()) {
+            return null;
         }
+
+
 
         if (user != null) {
             GenderDto genre;
