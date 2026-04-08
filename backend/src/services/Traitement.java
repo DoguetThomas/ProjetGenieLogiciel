@@ -5,16 +5,14 @@ import model.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import model.Split;
 
 public class Traitement {
-    private List<StravaRecord> records;
-    private Map<String, List<StravaRecord>> sortedRecords;
-    private UserModel user;
+    private final List<StravaRecord> records;
+    private final Map<String, List<StravaRecord>> sortedRecords;
+    private final UserModel user;
 
     public Traitement(String filePath, UserModel user) {
         this.records = StravaCsvReader.readCsv(filePath);
@@ -29,7 +27,7 @@ public class Traitement {
      * * @return Une map qui regroupe les données par séance
      */
     private Map<String, List<StravaRecord>> RecordSorter() {
-        Map<String, List<StravaRecord>> sortedMap = new HashMap<>();
+        Map<String, List<StravaRecord>> sortedMap = new LinkedHashMap<>();
 
         // une condition qui s'assure que les données ont bien été chargées
         if (this.records == null) {
@@ -70,7 +68,7 @@ public class Traitement {
         Double avgSpeed = this.getAvgSpeed(id);
 
         // Si la vitesse n'est pas calculable
-        if (avgSpeed == null || avgSpeed.isNaN()) {
+        if (avgSpeed.isNaN()) {
             return "Inconnu";
         }
 
@@ -78,9 +76,9 @@ public class Traitement {
         double seuilVitesse = 15.0;
 
         if (avgSpeed > seuilVitesse) {
-            return "Vélo";
+            return "BIKE";
         } else {
-            return "Course à pied";
+            return "RUN";
         }
     }
 
@@ -113,8 +111,7 @@ public class Traitement {
             }
         }
         // Conversion de la distance em km
-        double distancekm = maxDistance / 1000;
-        return distancekm;
+        return maxDistance / 1000;
     }
 
     /**
@@ -158,7 +155,7 @@ public class Traitement {
         }
 
         // au cas où aucune ligne n'avait d'heure valide
-        if (startTime == null || endTime == null) {
+        if (startTime == null) {
             return 0;
         }
 
@@ -168,18 +165,35 @@ public class Traitement {
         return (int) durationSeconds;
     }
 
+
     /**
-     * Calcule la vitesse moyenne en km/h d'une activité
+     * Calcule la vitesse moyenne d'une activité en mètres par seconde.
+     * Cette méthode se base sur la colonne "enhanced_speed"
+     * des enregistrements Strava. Les points sans données de vitesse sont ignorés.
      *
-     * @param id L'identifiant de l'activité
-     * @return La vitesse moyenne en km/h : AvgSpeed
+     * @param id L'identifiant unique de l'activité
+     * @return La vitesse moyenne en m/s, ou 0.0 si aucune donnée n'est disponible.
      */
     private Double getAvgSpeed(String id) {
-        // conversion du temps de secondes à heure
-        double durationHour = this.getDuration(id) / 3600.0;
-        // calcul distance
-        double avgSpeed = this.getDist(id) / durationHour;
-        return avgSpeed;
+        // récupère la liste des enregistrements pour cette activité
+        List<StravaRecord> records = this.sortedRecords.get(id);
+
+        if (records == null || records.isEmpty()) {
+            return 0.0;
+        }
+
+        double totalSpeed = 0.0;
+        int count = 0;
+
+        // parcourt chaque ligne de l'activité
+        for (StravaRecord record : records) {
+            if (record.getEnhancedSpeed() != null) {
+                totalSpeed += record.getEnhancedSpeed();
+                count++;
+            }
+        }
+
+        return count > 0 ? (totalSpeed / count) * 3.6 : 0.0;
     }
 
 
@@ -189,8 +203,8 @@ public class Traitement {
      *
      * @return L'allure en secondes par kilomètre (voir PaceDTO)
      */
-    public Double getAvgPace(String id) {
-        Double distanceKm = this.getDist(id);
+    private Double getAvgPace(String id) {
+        double distanceKm = this.getDist(id);
         Integer duration = this.getDuration(id);
 
         // éviter la division par 0
@@ -198,7 +212,7 @@ public class Traitement {
             return 0.0;
         }
 
-        return duration / distanceKm;
+        return (duration/60) / distanceKm;
     }
 
     /**
@@ -236,8 +250,7 @@ public class Traitement {
         if (count == 0) {
             return 0.0;
         }
-        double avgHR = totalHR / count;
-        return avgHR;
+        return totalHR / count;
     }
 
     /**
@@ -306,8 +319,7 @@ public class Traitement {
         if (count == 0) {
             return 0.0;
         }
-        double avgPower = totalPower / count;
-        return avgPower;
+        return totalPower / count;
     }
 
 
@@ -318,7 +330,7 @@ public class Traitement {
      * @param id L'identifiant unique de l'activité
      * @return Une liste d'objets Split contenant les statistiques de chaque kilomètre
      */
-    public List<Split> getSplits(String id) {
+    private List<Split> getSplits(String id) {
 
         List<Split> splits = new ArrayList<>();
 
@@ -402,17 +414,71 @@ public class Traitement {
         return splits;
     }
 
+    /**
+     * Calcul le temps dans les zones en secondes
+     * @param id de l'activité
+     * @return Arraylist de 5 int pour les 5 zones.
+     */
 
-    private Double[] calculateTimeInZones() {
-        return null;
+    public ArrayList<Integer> getTimeInZones(String id) {
+        if (this.sortedRecords == null) {
+            return null;
+        }
+        // On récupère la liste des points pour l'activité ciblée par l'ID
+        List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
+
+        if (recordsForActivity == null || recordsForActivity.isEmpty()) {
+            // On retourne 0.0 si la liste est vide
+            return null;
+        }
+
+        // On créer des durations par zones
+        int zt1 = 0, zt2 = 0, zt3 = 0, zt4 = 0, zt5 = 0;
+        ArrayList<Double> zoneHR = user.getSeuilZoneHR();
+
+        for (StravaRecord record : recordsForActivity) {
+            Double HR = record.getHeartRate();
+
+            // On vérifie qu'il existe bien une valeur de puissance pour chaque ligne
+            if (HR != null) {
+
+
+                if (HR < zoneHR.get(0)) {
+                        zt1++;
+                } else if (HR < zoneHR.get(1)) {
+                    zt2++;
+                } else if (HR < zoneHR.get(2)) {
+                    zt3++;
+                }else if (HR < zoneHR.get(3)) {
+                    zt4++;
+                }else {
+                    zt5++;
+                }
+
+
+            }
+        }
+
+        // On ajoute tous les int duration zone dans un array qu'on renvoie
+
+        ArrayList<Integer> durations = new ArrayList<>();
+        durations.add(zt1);
+        durations.add(zt2);
+        durations.add(zt3);
+        durations.add(zt4);
+        durations.add(zt5);
+
+        return durations;
     }
+
+
 
 
     /**
      * Transforme les données triées par activité en une liste d'objets ActivityModel
      * * @return La liste de toutes les activités prêtes à être affichées.
      */
-    /*public List<ActivityModel> getActivities() {
+    public List<ActivityModel> getActivities() {
         List<ActivityModel> activityList = new ArrayList<>();
 
         // vérifie si les données sont bien chargées
@@ -434,15 +500,17 @@ public class Traitement {
             activity.setAvgHR(this.getAvgHR(id));
             activity.setMaxHR(this.getMaxHR(id));
             activity.setAvgPower(this.getAvgPower(id));
-
+            activity.setRoute(this.getRoute(id));
+            activity.setSplits(this.getSplits(id));
             activity.setSport(this.determineSportType(id));
+            activity.setZoneHR(this.getTimeInZones(id));
 
             // ajoute à la liste finale
             activityList.add(activity);
         }
 
         return activityList;
-    }*/
+    }
 
     /**
      * Convertit les coordonnées brutes en données GPS classiques
@@ -465,7 +533,7 @@ public class Traitement {
      * @param id L'identifiant de la séance.
      * @return Une liste d'objets GpsPoint.
      */
-    public List<GpsPoint> getRoute(String id) {
+    private List<GpsPoint> getRoute(String id) {
         List<GpsPoint> route = new ArrayList<>();
 
         if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
@@ -491,6 +559,40 @@ public class Traitement {
             }
 
         return route;
+    }
+
+    public Map<LocalDateTime, Number> getMetricList(String id, String metric) {
+        Map<LocalDateTime, Number> res = new HashMap<>();
+        if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
+            return res;
+        }
+
+        List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
+
+        for (StravaRecord record : recordsForActivity) {
+            Number pointsMetric = 0;
+            if (Objects.equals(metric, "Altitude")){
+                pointsMetric = record.getEnhancedAltitude();
+            }
+            else if (Objects.equals(metric, "Speed")){
+                pointsMetric = record.getEnhancedSpeed();
+            }
+            else if (Objects.equals(metric, "HeartRate")){
+                pointsMetric = record.getHeartRate();
+            }
+            else if (Objects.equals(metric, "Power")){
+                pointsMetric = record.getPower();
+            }
+            else if (Objects.equals(metric, "Cadence")){
+                pointsMetric = record.getCadence();
+            }
+            else if (Objects.equals(metric, "GroundTime")){
+                pointsMetric = record.getGroundTime();
+            }
+
+            res.put(record.getTimestamp(), pointsMetric);
+        }
+        return res;
     }
 
 }
