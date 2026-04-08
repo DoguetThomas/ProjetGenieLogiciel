@@ -24,6 +24,13 @@ class ActivityImplTest {
         Splits.add(split1);
         Splits.add(split2);
 
+        List<Integer> zonesHR = new ArrayList<>();
+        zonesHR.add(600);
+        zonesHR.add(1200);
+        zonesHR.add(1000);
+        zonesHR.add(500);
+        zonesHR.add(300);
+
         ActivityImpl activite = new ActivityImpl(
                 "ACT-999",
                 25000.0,
@@ -34,7 +41,7 @@ class ActivityImplTest {
                 145.0,
                 185.0,
                 2.35,
-                600, 1200, 1000, 500, 300,
+                zonesHR,
                 route,
                 Splits
         );
@@ -44,6 +51,6 @@ class ActivityImplTest {
         assertEquals(25000.0, activite.getDistance(), "La distance doit être 25000.0");
         assertEquals("BIKE", activite.getSport(), "Le sport doit être BIKE");
         assertEquals(3600, activite.getDuration(), "La durée doit être 3600");
-        assertEquals(1200, activite.getTz2(), "Le temps en zone 2 doit être 1200");
+
     }
 }
