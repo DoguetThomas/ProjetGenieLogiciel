@@ -27,7 +27,7 @@ public class Traitement {
      * * @return Une map qui regroupe les données par séance
      */
     private Map<String, List<StravaRecord>> RecordSorter() {
-        Map<String, List<StravaRecord>> sortedMap = new HashMap<>();
+        Map<String, List<StravaRecord>> sortedMap = new LinkedHashMap<>();
 
         // une condition qui s'assure que les données ont bien été chargées
         if (this.records == null) {
