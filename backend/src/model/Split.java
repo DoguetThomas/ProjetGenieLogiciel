@@ -4,9 +4,9 @@ package model;
      * Représente les statistiques d'un kilomètre (un split)
      */
     public class Split {
-        private int km;
-        private int durationSeconds;
-        private int avgHeartRate;
+        private final int km;
+        private final int durationSeconds;
+        private final int avgHeartRate;
 
         public Split(int km, int durationSeconds, int avgHeartRate) {
             this.km = km;

@@ -69,7 +69,7 @@ public class Traitement {
         Double avgSpeed = this.getAvgSpeed(id);
 
         // Si la vitesse n'est pas calculable
-        if (avgSpeed == null || avgSpeed.isNaN()) {
+        if (avgSpeed.isNaN()) {
             return "Inconnu";
         }
 
@@ -156,7 +156,7 @@ public class Traitement {
         }
 
         // au cas où aucune ligne n'avait d'heure valide
-        if (startTime == null || endTime == null) {
+        if (startTime == null) {
             return 0;
         }
 

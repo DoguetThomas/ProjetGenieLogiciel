@@ -2,7 +2,6 @@ package services;
 
 import dto.GenderDto;
 import dto.UserProfileDto;
-import model.UserImpl;
 import model.UserModel;
 
 /**

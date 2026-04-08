@@ -2,8 +2,8 @@ package model;
 
 // classe GpsPoint pour stocker les coordonnées de chaque point
 public class GpsPoint {
-    private Double latitude ;
-    private Double longitude;
+    private final Double latitude ;
+    private final Double longitude;
 
     public GpsPoint (Double latitude, Double longitude){
         this.latitude = latitude;
