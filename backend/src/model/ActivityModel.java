@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 public interface ActivityModel {
 
     /**
@@ -111,65 +113,13 @@ public interface ActivityModel {
      */
     public void setAvgPace(Double avgPace);
 
-    /**
-     * Récupère le temps passé dans la zone d'entraînement 1 (TZ1).
-     * * @return Le temps en zone 1.
-     */
-    public int getTz1();
-
-    /**
-     * Définit le temps passé dans la zone d'entraînement 1 (TZ1).
-     * * @param TZ1 Le nouveau temps en zone 1.
-     */
-    public void setTz1(int tz1);
-
-    /**
-     * Récupère le temps passé dans la zone d'entraînement 2 (TZ2).
-     * * @return Le temps en zone 2.
-     */
-    public int getTz2();
-
-    /**
-     * Définit le temps passé dans la zone d'entraînement 2 (TZ2).
-     * * @param TZ2 Le nouveau temps en zone 2.
-     */
-    public void setTz2(int tz2);
-
-    /**
-     * Récupère le temps passé dans la zone d'entraînement 3 (TZ3).
-     * * @return Le temps en zone 3.
-     */
-    public int getTz3();
-
-    /**
-     * Définit le temps passé dans la zone d'entraînement 3 (TZ3).
-     * * @param TZ3 Le nouveau temps en zone 3.
-     */
-    public void setTz3(int tz3);
-
-    /**
-     * Récupère le temps passé dans la zone d'entraînement 4 (TZ4).
-     * * @return Le temps en zone 4.
-     */
-    public int getTz4();
-
-    /**
-     * Définit le temps passé dans la zone d'entraînement 4 (TZ4).
-     * * @param TZ4 Le nouveau temps en zone 4.
-     */
-    public void setTz4(int tz4);
-
-    /**
-     * Récupère le temps passé dans la zone d'entraînement 5 (TZ5).
-     * * @return Le temps en zone 5.
-     */
-    public int getTz5();
-
-    /**
-     * Définit le temps passé dans la zone d'entraînement 5 (TZ5).
-     * * @param TZ5 Le nouveau temps en zone 5.
-     */
-    public void setTz5(int tz5);
 
 
+    public void setZoneHR(List<Integer> zoneHR);
+
+    public List<Integer> getZoneHR();
+  
+    public List<Split> getSplits();
+
+    public List<GpsPoint> getRoute();
 }

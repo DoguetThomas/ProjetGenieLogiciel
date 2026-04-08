@@ -11,16 +11,11 @@ public class ActivityImpl implements ActivityModel{
     private Double avgHR;
     private Double maxHR;
     private Double avgPace;
-    private int tz1;
-    private int tz2;
-    private int tz3;
-    private int tz4;
-    private int tz5;
+    private List<Integer> zoneHR;
     private List<GpsPoint> route;
-    private List<Integer>splits ;
+    private List<Split>splits ;
 
-
-    public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, int tz1, int tz2, int tz3, int tz4, int tz5, List<GpsPoint> route, List<Integer>splits) {
+    public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, List<Integer> zoneHR, List<GpsPoint> route, List<Split>splits) {
         this.id = id;
         this.distance = distance;
         this.avgSpeed = avgSpeed;
@@ -30,11 +25,7 @@ public class ActivityImpl implements ActivityModel{
         this.avgHR = avgHR;
         this.maxHR = maxHR;
         this.avgPace = avgPace;
-        this.tz1 = tz1;
-        this.tz2 = tz2;
-        this.tz3 = tz3;
-        this.tz4 = tz4;
-        this.tz5 = tz5;
+        this.zoneHR = zoneHR;
         this.route = route;
         this.splits = splits;
 
@@ -133,50 +124,17 @@ public class ActivityImpl implements ActivityModel{
     }
 
     @Override
-    public int getTz1() {
-        return tz1;
-    }
-
-    public void setTz1(int tz1) {
-        this.tz1 = tz1;
+    public void setZoneHR(List<Integer> zoneHR) {
+        this.zoneHR = zoneHR;
     }
 
     @Override
-    public int getTz2() {
-        return tz2;
+    public List<Integer> getZoneHR() {
+        return zoneHR;
     }
 
-    public void setTz2(int tz2) {
-        this.tz2 = tz2;
-    }
 
     @Override
-    public int getTz3() {
-        return tz3;
-    }
-
-    public void setTz3(int tz3) {
-        this.tz3 = tz3;
-    }
-
-    @Override
-    public int getTz4() {
-        return tz4;
-    }
-
-    public void setTz4(int tz4) {
-        this.tz4 = tz4;
-    }
-
-    @Override
-    public int getTz5() {
-        return tz5;
-    }
-
-    public void setTz5(int tz5) {
-        this.tz5 = tz5;
-    }
-
     public List<GpsPoint> getRoute() {
         return this.route;
     }
@@ -185,12 +143,12 @@ public class ActivityImpl implements ActivityModel{
         this.route = route;
     }
 
-
-    public List<Integer> getSplits() {
+    @Override
+    public List<Split> getSplits() {
         return this.splits;
     }
 
-    public void setSplits(List<Integer> splits) {
+    public void setSplits(List<Split> splits) {
         this.splits = splits;
 
     }
@@ -198,20 +156,18 @@ public class ActivityImpl implements ActivityModel{
     @Override
     public String toString() {
         return "ActivityImpl{" +
-                "ID='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", distance=" + distance +
                 ", avgSpeed=" + avgSpeed +
                 ", sport='" + sport + '\'' +
-                ", Duration=" + duration +
+                ", duration=" + duration +
                 ", avgPower=" + avgPower +
                 ", avgHR=" + avgHR +
                 ", maxHR=" + maxHR +
                 ", avgPace=" + avgPace +
-                ", TZ1=" + tz1 +
-                ", TZ2=" + tz2 +
-                ", TZ3=" + tz3 +
-                ", TZ4=" + tz4 +
-                ", TZ5=" + tz5 +
+                ", zoneHR=" + zoneHR +
+                ", route=" + route +
+                ", splits=" + splits +
                 '}';
     }
 }

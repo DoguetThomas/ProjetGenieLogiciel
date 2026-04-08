@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 public interface UserModel {
 
     /**
@@ -49,5 +51,35 @@ public interface UserModel {
      * @param weight Le nouveau poids de l'utilisateur.
      */
     public void setWeight(double weight);
+
+    /**
+     * Définit le HRmax de l'utilisateur
+     * @param  age de l'utilisateur
+     * @param genre de l'utilisateur
+     */
+    public void setMaxHRUser(int age, boolean genre);
+
+    /**
+     * Récupète le HRmax de l'utilisateur
+     * @return le HRmax de l'utilisateur
+     */
+    public double getMaxHRUser();
+
+
+    /**
+     * Définit les 4 seuils de HR pour séparer les 5 zones de HR de Garmin en format liste
+     * @param maxHRUser de l'utilisateur
+     */
+    public void setSeuilZoneHR(double maxHRUser);
+
+    /**
+     * Récupère les 4 seuils de HR pour séparer les 5 zones de HR de Garmin
+     * @return seuilZoneHR
+     */
+
+    public ArrayList<Double> getSeuilZoneHR();
+
+
+
 
 }
