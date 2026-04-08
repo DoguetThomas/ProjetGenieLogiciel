@@ -15,7 +15,6 @@ public class ActivityImpl implements ActivityModel{
     private List<GpsPoint> route;
     private List<Split>splits ;
 
-  
     public ActivityImpl(String id, Double distance, Double avgSpeed, String sport, int duration, Double avgPower, Double avgHR, Double maxHR, Double avgPace, List<Integer> zoneHR, List<GpsPoint> route, List<Split>splits) {
         this.id = id;
         this.distance = distance;
