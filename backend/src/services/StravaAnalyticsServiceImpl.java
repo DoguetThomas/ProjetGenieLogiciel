@@ -230,25 +230,42 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
     /**
      * Récupérer les zones pour chaque intensité pour une activité
      * @param id de l'activité
-     * @return les zones en pourcentage pour chaque zone d'intensité
+     * @return un {@link ZoneDto} contenant 5 pourcentages (Z1 à Z5),
+     *         ou {@code null} si l'activité est introuvable
      */
     @Override
-    public ZoneDto getMetricsZone(String id) throws ActivityNotFoundException {
-        ActivityModel activity = findActivityById(id);
-        List<Integer> rawZones = activity.getZoneHR();
-        if (rawZones == null || rawZones.isEmpty()) {
-            return new ZoneDto(new int[]{0, 0, 0, 0, 0});
+    public ZoneDto getMetricsZone(String id) {
+        if (id == null) {
+            return null;
         }
-        int total = 0;
-        for (int z : rawZones) {
-            total += z;
-        }
-        int[] percentages = new int[rawZones.size()];
-        if (total > 0) {
-            for (int i = 0; i < rawZones.size(); i++) {
-                percentages[i] = (int) Math.round((rawZones.get(i) * 100.0) / total);
+
+        for (ActivityModel activity : this.activities) {
+            if (activity != null && id.equals(activity.getId())) {
+
+                // Recalcul à chaque appel via Traitement qui utilise
+                // le UserModel partagé avec ses seuils à jour
+                ArrayList<Integer> rawZones = this.traitement.getTimeInZones(id);
+
+                if (rawZones == null || rawZones.isEmpty()) {
+                    return new ZoneDto(new int[]{0, 0, 0, 0, 0});
+                }
+
+                // Calcul du total pour convertir en pourcentages
+                int total = 0;
+                for (int z : rawZones) {
+                    total += z;
+                }
+
+                int[] percentages = new int[rawZones.size()];
+                if (total > 0) {
+                    for (int i = 0; i < rawZones.size(); i++) {
+                        percentages[i] = (int) Math.round((rawZones.get(i) * 100.0) / total);
+                    }
+                }
+
+                return new ZoneDto(percentages);
             }
         }
-        return new ZoneDto(percentages);
+        return null;
     }
 }

@@ -416,10 +416,11 @@ public class Traitement {
 
     /**
      * Calcul le temps dans les zones en secondes
+     * @param id de l'activité
      * @return Arraylist de 5 int pour les 5 zones.
      */
 
-    private ArrayList<Integer> getTimeInZones(String id) {
+    public ArrayList<Integer> getTimeInZones(String id) {
         if (this.sortedRecords == null) {
             return null;
         }
