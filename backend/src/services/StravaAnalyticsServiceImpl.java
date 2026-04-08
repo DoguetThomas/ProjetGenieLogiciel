@@ -2,9 +2,12 @@ package services;
 
 import dto.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import exceptions.ActivityNotFoundException;
 import model.*;
@@ -119,7 +122,6 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
         for (GpsPoint point : pointsGps){
             route.add(new GeoDto(point.getLatitude(), point.getLongitude()));
         }
-        // Retourne le DTO de la route en lui passant uniquement la liste des points
         return new RouteDto(route);
     }
 
@@ -134,8 +136,12 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService{
         ActivityModel activity = findActivityById(id);
         ActivityTypeDto sport = determineSport(activity);
         List<TimedValueDto> points = new ArrayList<>();
-        for (Map.Entry<String, Number> entry : this.traitement.getMetricList(activity.getId(), metricName).entrySet()){
-            points.add(new TimedValueDto(entry.getKey(), entry.getValue()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        Map<LocalDateTime, Number> rawData = this.traitement.getMetricList(activity.getId(), metricName);
+        Map<LocalDateTime, Number> sortedData = new TreeMap<>(rawData);
+        for (Map.Entry<LocalDateTime, Number> entry : sortedData.entrySet()){
+            String timeText = formatter.format(entry.getKey());
+            points.add(new TimedValueDto(timeText, entry.getValue()));
         }
         return new MetricDto(sport, metricName, points);
     }

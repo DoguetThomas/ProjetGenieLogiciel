@@ -5,7 +5,6 @@ import model.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import model.Split;
@@ -561,8 +560,8 @@ public class Traitement {
         return route;
     }
 
-    public Map<String, Number> getMetricList(String id, String metric) {
-        Map<String, Number> res = new HashMap<>();
+    public Map<LocalDateTime, Number> getMetricList(String id, String metric) {
+        Map<LocalDateTime, Number> res = new HashMap<>();
         if (this.sortedRecords == null || !this.sortedRecords.containsKey(id)) {
             return res;
         }
@@ -590,7 +589,7 @@ public class Traitement {
                 pointsMetric = record.getGroundTime();
             }
 
-            res.put(DateTimeFormatter.ofPattern("HH:mm:ss").format(record.getTimestamp()), pointsMetric);
+            res.put(record.getTimestamp(), pointsMetric);
         }
         return res;
     }
