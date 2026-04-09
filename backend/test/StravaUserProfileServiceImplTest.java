@@ -41,7 +41,7 @@ public class StravaUserProfileServiceImplTest {
 
     @Test
     void setUserProfile_thenGetShouldReflectNewGender() {
-        service.setUserProfile(new UserProfileDto(30, GenderDto.MALE, 80.0, 180.0));
+        service.setUserProfile(new UserProfileDto(28, GenderDto.MALE, 80.0, 180.0));
         assertEquals(GenderDto.MALE, service.getUserProfile().getGender());
     }
 
