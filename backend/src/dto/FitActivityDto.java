@@ -129,39 +129,39 @@ public class FitActivityDto {
         sb.append("avgSpeed=").append(avgSpeed).append(',');
         sb.append("avgPower=").append(avgPower).append(',');
 
-        // sb.append("routePoints=[");
-        // for (GeoDto g : routePoints) {
-        // sb.append('(').append(g.getLatitude()).append(',').append(g.getLongitude()).append(')').append(',');
-        // }
-        // if (!routePoints.isEmpty())
-        // sb.setLength(sb.length() - 1);
-        // sb.append("],");
-        //
-        // sb.append("splits=[");
-        // for (SplitDto s : splits) {
-        // sb.append('{').append("km=").append(s.getKm()).append(',')
-        // .append("splitSeconds=").append(s.getSplitSeconds()).append(',')
-        // .append("avgHr=").append(s.getAvgHeartRate()).append('}').append(',');
-        // }
-        // if (!splits.isEmpty())
-        // sb.setLength(sb.length() - 1);
-        // sb.append("],");
-        //
-        // sb.append("computedMetrics={");
-        // for (Map.Entry<String, List<TimedValueDto>> e : computedMetrics.entrySet()) {
-        // sb.append(e.getKey()).append(':');
-        // List<TimedValueDto> points = e.getValue();
-        // sb.append('[');
-        // for (TimedValueDto tv : points) {
-        // sb.append('(').append(tv.getTimestamp()).append(',').append(tv.getValue()).append(')').append(',');
-        // }
-        // if (!points.isEmpty())
-        // sb.setLength(sb.length() - 1);
-        // sb.append(']').append(',');
-        // }
-        // if (!computedMetrics.isEmpty())
-        // sb.setLength(sb.length() - 1);
-        // sb.append('}');
+         sb.append("routePoints=[");
+         for (GeoDto g : routePoints) {
+         sb.append('(').append(g.getLatitude()).append(',').append(g.getLongitude()).append(')').append(',');
+         }
+         if (!routePoints.isEmpty())
+         sb.setLength(sb.length() - 1);
+         sb.append("],");
+
+         sb.append("splits=[");
+         for (SplitDto s : splits) {
+         sb.append('{').append("km=").append(s.getKm()).append(',')
+         .append("splitSeconds=").append(s.getSplitSeconds()).append(',')
+         .append("avgHr=").append(s.getAvgHeartRate()).append('}').append(',');
+         }
+         if (!splits.isEmpty())
+         sb.setLength(sb.length() - 1);
+         sb.append("],");
+
+         sb.append("computedMetrics={");
+         for (Map.Entry<String, List<TimedValueDto>> e : computedMetrics.entrySet()) {
+         sb.append(e.getKey()).append(':');
+         List<TimedValueDto> points = e.getValue();
+         sb.append('[');
+         for (TimedValueDto tv : points) {
+         sb.append('(').append(tv.getTimestamp()).append(',').append(tv.getValue()).append(')').append(',');
+         }
+         if (!points.isEmpty())
+         sb.setLength(sb.length() - 1);
+         sb.append(']').append(',');
+         }
+         if (!computedMetrics.isEmpty())
+         sb.setLength(sb.length() - 1);
+         sb.append('}');
 
         sb.append(",source=").append(source);
         sb.append('}');
