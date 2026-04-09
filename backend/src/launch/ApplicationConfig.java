@@ -29,7 +29,7 @@ public class ApplicationConfig {
         StravaAnalyticsServiceImpl analyticsImpl = new StravaAnalyticsServiceImpl();
         this.analyticsService = analyticsImpl;
 
-        this.importService = new ImportServiceImpl(analyticsImpl.getActivities());
+        this.importService = new ImportServiceImpl(analyticsImpl.getActivities(), analyticsImpl.getTraitement());
 
     }
 

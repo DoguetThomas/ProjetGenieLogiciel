@@ -330,7 +330,7 @@ public class Traitement {
      * @param id L'identifiant unique de l'activité
      * @return Une liste d'objets Split contenant les statistiques de chaque kilomètre
      */
-    private List<Split> getSplits(String id) {
+    public List<Split> getSplits(String id) {
 
         List<Split> splits = new ArrayList<>();
 

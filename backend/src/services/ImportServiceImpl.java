@@ -1,12 +1,19 @@
 package services;
 
 import dto.FitActivityDto;
+import dto.TimedValueDto;
 import model.*;
 import dto.GeoDto;
 import dto.SplitDto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implémentation du service d'import de fichiers FIT Strava like
@@ -22,52 +29,40 @@ public class ImportServiceImpl implements ImportService {
     // Liste partagée par référence avec StravaAnalyticsServiceImpl
     private final List<ActivityModel> activities;
 
+    private final Traitement traitement;
+
     /**
      * @param activities liste des activités du service analytique récupéré par un getter dans StravaAnalyticsImpl.getActivities()
      */
-    public ImportServiceImpl(List<ActivityModel> activities) {
+    public ImportServiceImpl(List<ActivityModel> activities, Traitement traitement) {
         this.activities = activities;
+        this.traitement = traitement;
     }
+
 
 
     @Override
     public void importFitActivity(FitActivityDto request) {
-        if (request == null) {return;}
-
-        // vérifie qu'une activité avec cet id n'existe pas déjà
-        for (ActivityModel existing : this.activities) {
-            if (existing != null && request.getId().equals(existing.getId())) {
-                return;
-            }
-        }
-
-        // Convertir la route : GeoDto vers GpsPoint
-        List<GpsPoint> route = new ArrayList<>();
-        for (GeoDto geo : request.getRoutePoints()) {
-            route.add(new GpsPoint(geo.getLatitude(), geo.getLongitude()));
-        }
-
-        // Convertion des splits : SplitDto vers Split
-        // Split(km, durationSeconds, avgHeartRate) — voir Split.java
-        List<Split> splits = new ArrayList<>();
-        for (SplitDto s : request.getSplits()) {
-            splits.add(new Split(s.getKm(), s.getSplitSeconds(), s.getAvgHeartRate()));
-        }
+        if (request == null) return;
 
         // Calcul de l'allure moyenne en min/km
-        //    pace = (durée en secondes / 60) / distance en km
         double avgPace = 0.0;
         if (request.getTotalDistance() > 0 && request.getTotalTime() > 0) {
             avgPace = (request.getTotalTime() / 60.0) / request.getTotalDistance();
         }
 
-        // Construction l'ActivityImpl avec tous les champs
-        // zoneHR renvoie null car calculé plus tard
+        // Route GPS
+        List<GpsPoint> route = new ArrayList<>();
+        for (GeoDto geo : request.getRoutePoints()) {
+            route.add(new GpsPoint(geo.getLatitude(), geo.getLongitude()));
+        }
+
+        // Construction de l'activité
         ActivityImpl activity = new ActivityImpl(
                 request.getId(),
                 request.getTotalDistance(),
                 request.getAvgSpeed(),
-                request.getSportType(),
+                request.getSportType().toUpperCase(),
                 (int) request.getTotalTime(),
                 request.getAvgPower(),
                 (double) request.getAvgHr(),
@@ -75,13 +70,81 @@ public class ImportServiceImpl implements ImportService {
                 avgPace,
                 null,
                 route,
-                splits
+                new ArrayList<>() // splits calculés depuis les métriques
         );
 
-        //Ajout à la liste partagée
-        this.activities.add(activity);
+        // Stocker les métriques FIT directement dans l'activité
+        activity.setComputedMetrics(request.getComputedMetrics());
+        activity.setSplits(computeSplitsFromMetrics(request.getComputedMetrics(), request.getTotalDistance()));
+
+        // Dans importFitActivity(), temporairement
+        System.out.println("SportType reçu : " + request.getSportType());
+
+// Puis normalisation
+        String sport = request.getSportType().toUpperCase();
+        if (sport.contains("CYCL") || sport.contains("BIKE") || sport.contains("RIDE")) {
+            sport = "BIKE";
+        } else {
+            sport = "RUN";
+        }
+        activity.setSport(sport);
 
 
-
+        // Remplace si existe déjà, sinon ajoute
+        for (int i = 0; i < activities.size(); i++) {
+            if (activities.get(i) != null && request.getId().equals(activities.get(i).getId())) {
+                activities.set(i, activity);
+                return;
+            }
+        }
+        activities.add(activity);
     }
+
+    /**
+     * Calcule les splits par km depuis les métriques FIT.
+     * Découpe les points en blocs correspondant à chaque kilomètre.
+     */
+    private List<Split> computeSplitsFromMetrics(Map<String, List<TimedValueDto>> metrics, double totalDistanceKm) {
+        List<Split> splits = new ArrayList<>();
+        List<TimedValueDto> hrPoints = metrics.getOrDefault("heart-rate", new ArrayList<>());
+        List<TimedValueDto> pacePoints = metrics.getOrDefault("pace", new ArrayList<>());
+
+        if (pacePoints.isEmpty() || totalDistanceKm <= 0) return splits;
+
+        // Nombre de points par km
+        int totalPoints = pacePoints.size();
+        int totalKm = (int) Math.ceil(totalDistanceKm);
+        int blockSize = totalPoints / totalKm;
+        if (blockSize == 0) return splits;
+
+        for (int km = 0; km < totalKm; km++) {
+            int start = km * blockSize;
+            int end = Math.min(start + blockSize, totalPoints);
+
+            // Durée du split en secondes depuis la pace moyenne (min/km → secondes)
+            double avgPaceVal = 0;
+            int paceCount = 0;
+            for (int j = start; j < end; j++) {
+                if (pacePoints.get(j).getValue() != null) {
+                    avgPaceVal += pacePoints.get(j).getValue().doubleValue();
+                    paceCount++;
+                }
+            }
+            int splitSeconds = paceCount > 0 ? (int) (avgPaceVal / paceCount * 60) : 0;
+
+            // FC moyenne du split
+            int hrSum = 0, hrCount = 0;
+            for (int j = start; j < end && j < hrPoints.size(); j++) {
+                if (hrPoints.get(j).getValue() != null) {
+                    hrSum += hrPoints.get(j).getValue().intValue();
+                    hrCount++;
+                }
+            }
+            int avgHr = hrCount > 0 ? hrSum / hrCount : 0;
+
+            splits.add(new Split(km + 1, splitSeconds, avgHr));
+        }
+        return splits;
+    }
+
 }
