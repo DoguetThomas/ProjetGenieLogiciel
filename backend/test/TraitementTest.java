@@ -24,5 +24,5 @@ public class TraitementTest {
         Record1 = new StravaRecord(0.0,0.0, 0.0,0.0,100.0,0.0, 100.0, "Activity1", 100.0, 100.0,100.0,100.0,100.0,100.0,LocalDateTime.of(2023, 12, 12, 12, 12, 12));
         Record2 = new StravaRecord(0.0,0.0, 0.0,0.0,100.0,0.0, 100.0, "Activity1", 100.0, 100.0,100.0,100.0,100.0,100.0,LocalDateTime.of(2023, 12, 12, 12, 12, 12));
         Record3 = new StravaRecord(0.0,0.0, 0.0,0.0,100.0,0.0, 100.0, "Activity1", 100.0, 100.0,100.0,100.0,100.0,100.0,LocalDateTime.of(2023, 12, 12, 12, 12, 12));
-    }
+   }
 }

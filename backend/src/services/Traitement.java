@@ -19,6 +19,13 @@ public class Traitement {
         this.user = user;
     }
 
+    // Nouveau constructeur uniquement pour les tests
+    public Traitement(List<StravaRecord> records, UserModel user) {
+        this.records = records;
+        this.sortedRecords = this.RecordSorter();
+        this.user = user;
+    }
+
     /**
      * Regroupe les enregistrements par activité
      * Utilise l'attribut "datafile" comme identifiant pour associer
