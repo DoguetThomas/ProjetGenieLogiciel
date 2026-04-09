@@ -17,18 +17,17 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
     private final Traitement traitement;
 
     /**
-     * Initialise le service analytique en utilisant l'instance partagée de l'utilisateur via {@link UserSession}
-     * Cela garantit que {@link Traitement} utilise le même {@link model.UserModel}
-     * que {@link StravaUserProfileServiceImpl}.
-     * Si l'utilisateur met à jour son profil depuis le frontend, les seuils de zones cardiaques recalculés
-     * sont automatiquement pris en compte lors des prochains appels analytiques.
+     * Instancie le service analytique en utilisant l'instance partagée de l'utilisateur via {@link UserSession}
+     * Cela garantit que {@link Traitement} utilise le même {@link model.UserModel} que {@link StravaUserProfileServiceImpl}.
+     * Si l'utilisateur met à jour son profil depuis le frontend, seuils de zones cardiaques recalculés et
+     * automatiquement pris en compte lors des prochains traitements.
      */
 
 
     public StravaAnalyticsServiceImpl() {
         this.activities = new ArrayList<>();
 
-        // Récupération de l'instance partagée — jamais de new UserImpl() ici
+        // Récupération de l'instance partagée en créant une instance
         UserModel user = UserSession.getInstance();
 
         this.traitement = new Traitement("../data/strava.csv", UserSession.getInstance());
@@ -61,6 +60,11 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
             }
         }
         return allActivitiesDto;
+    }
+
+    // Getter des activities pour pouvoir rajouter celle importé en fit
+    public List<ActivityModel> getActivities() {
+        return this.activities;
     }
 
     /**
@@ -234,7 +238,7 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
      */
     @Override
     public ZoneDto getMetricsZone(String id) {
-        // Profil non renseigné → zones vides
+        // Profil non renseigné = zonesHR vides
         UserModel user = UserSession.getInstance();
         if (user == null || user.getSeuilZoneHR() == null) {
             return new ZoneDto(new int[]{0, 0, 0, 0, 0});
