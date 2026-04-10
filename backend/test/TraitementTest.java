@@ -45,7 +45,7 @@ public class TraitementTest {
     }
 
     @Test
-    public void testGetActivitiesMetrics() {
+    public void testGetActivities() {
 
         List<ActivityModel> activities = traitement.getActivities();
 
