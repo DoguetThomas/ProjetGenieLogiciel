@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
-import static org.junit.jupiter.api.Assertions.*; // Utilise uniquement Jupiter
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserImplTest {
 
@@ -41,23 +41,20 @@ class UserImplTest {
 
     @Test
     void testCalculsCardiaques() {
-        UserImpl user = new UserImpl(20, false, 180.0, 75.0); // Homme
+        UserImpl user = new UserImpl(20, false, 180.0, 75.0);
 
-        // Test MaxHR Homme : 220 - 20 = 200
         user.setMaxHRUser(20, false);
         assertEquals(200.0, user.getMaxHRUser());
 
-        // Test MaxHR Femme : 226 - 20 = 206
         user.setMaxHRUser(20, true);
         assertEquals(206.0, user.getMaxHRUser());
 
-        // Test des zones (seuil Z1/Z2 à 60% de 200 = 120)
-        user.setMaxHRUser(20, false); // On repasse à 200
+        user.setMaxHRUser(20, false);
         user.setSeuilZoneHR(user.getMaxHRUser());
         ArrayList<Double> seuils = user.getSeuilZoneHR();
 
-        assertEquals(120.0, seuils.get(0)); // 60%
-        assertEquals(180.0, seuils.get(3)); // 90%
+        assertEquals(120.0, seuils.get(0));
+        assertEquals(180.0, seuils.get(3));
     }
 
     @Test
