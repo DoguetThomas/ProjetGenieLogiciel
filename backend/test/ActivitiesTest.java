@@ -1,5 +1,5 @@
 import java.time.LocalDateTime;
-import model.ActivityImpl;
+
 import model.ActivityModel;
 import model.StravaRecord;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,11 +8,10 @@ import model.UserImpl;
 import services.Traitement;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TraitementTest {
+public class ActivitiesTest {
     private Traitement traitement;
     private UserImpl User1;
     private StravaRecord Record1;
