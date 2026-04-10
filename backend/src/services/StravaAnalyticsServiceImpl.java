@@ -273,7 +273,7 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
         for (ActivityModel activity : this.activities) {
             if (activity != null && id.equals(activity.getId())) {
 
-                // Activité FIT — calcul depuis computedMetrics
+                // Activité FIT — calcul depuis computedMetrics //TODO moche comme tout de faire ça à bouger dans traitement
                 if (activity instanceof ActivityImpl) {
                     ActivityImpl impl = (ActivityImpl) activity;
                     if (impl.getComputedMetrics() != null
@@ -302,7 +302,7 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
                     }
                 }
 
-                // Activité CSV — pipeline existant
+                // Activité CSV
                 ArrayList<Integer> rawZones = this.traitement.getTimeInZones(id);
                 if (rawZones == null) return new ZoneDto(new int[]{0, 0, 0, 0, 0});
                 int total = 0;
