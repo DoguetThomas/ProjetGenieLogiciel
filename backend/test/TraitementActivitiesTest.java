@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ActivitiesTest {
+public class TraitementActivitiesTest {
     private Traitement traitement;
     private UserImpl User1;
     private StravaRecord Record1;
@@ -36,7 +36,7 @@ public class ActivitiesTest {
 
         Record3 = new StravaRecord(0.0, 0.0, 0.0, 0.0, 210.0, 0.0, 80.0,
                 "Activity1", 300.0, 100.0, 10.0, 160.0, 48.0, 2.0,
-                LocalDateTime.of(2023, 12, 12, 12, 12, 12));
+                LocalDateTime.of(2023, 12, 12, 12, 12, 13));
 
         // On injecte les records dans le traitement via ton super constructeur de test !
         List<StravaRecord> records = List.of(Record1, Record2, Record3);

@@ -74,7 +74,7 @@ public class Traitement {
         Double avgSpeed = this.getAvgSpeed(id);
 
         // Si la vitesse n'est pas calculable
-        if (avgSpeed.isNaN()) {
+        if (avgSpeed.isNaN() || avgSpeed == 0.0) {
             return "Inconnu";
         }
 
