@@ -432,6 +432,7 @@ public class Traitement {
             return null;
         }
 
+
         // On créer des durations par zones
         int zt1 = 0, zt2 = 0, zt3 = 0, zt4 = 0, zt5 = 0;
         ArrayList<Double> zoneHR = user.getSeuilZoneHR();
