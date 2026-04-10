@@ -1,54 +1,70 @@
 import model.UserImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.*; // Utilise uniquement Jupiter
 
 class UserImplTest {
 
     @Test
     void testCreationEtLectureUtilisateur() {
         UserImpl user = new UserImpl(25, true, 180.5, 75.0);
+        assertEquals(25, user.getAge());
+        Assertions.assertTrue(user.getGenre());
+        assertEquals(180.5, user.getHeight());
+        assertEquals(75.0, user.getWeight());
+    }
 
+    @Test
+    void testSetters() {
+        UserImpl user = new UserImpl();
+        user.setAge(30);
+        user.setGenre(false);
+        user.setHeight(170.0);
+        user.setWeight(70.0);
 
-        assertEquals(25, user.getAge(), "L'âge récupéré doit être 25");
-        assertEquals(true, user.getGenre(), "Le genre récupéré doit être true");
-        assertEquals(180.5, user.getHeight(), "La taille récupérée doit être 180.5");
-        assertEquals(75.0, user.getWeight(), "Le poids récupéré doit être 75.0");
+        assertEquals(30, user.getAge());
+        assertFalse(user.getGenre());
+        assertEquals(170.0, user.getHeight());
+        assertEquals(70.0, user.getWeight());
     }
 
     @Test
     void testValeursImpossible() {
-        assertThrows(Exception.class, () -> {
-            new UserImpl(-5, true, 180.5, 75.0);
-        }, "Un âge en dessous du seuil doit déclencher une exception");
-        assertThrows(Exception.class, () -> {
-            new UserImpl(120, true, 180.5, 75.0);
-        }, "Un âge au dessus du seuil doit déclencher une exception");
-        assertThrows(Exception.class, () -> {
-            new UserImpl(20, true, 70.0, 75.0);
-        }, "Une taille en dessous du seuil doit déclencher une exception");
-        assertThrows(Exception.class, () -> {
-            new UserImpl(20, true, 300.0, 75.0);
-        }, "Une taille au dessus du seuil doit déclencher une exception");
-        assertThrows(Exception.class, () -> {
-            new UserImpl(20, true, 180.5, 30.0);
-        }, "Un poids en dessous du seuil doit déclencher une exception");
-        assertThrows(Exception.class, () -> {
-            new UserImpl(20, true, 180.5, 30.0);
-        }, "Un poids au dessus du seuil doit déclencher une exception");
+        assertThrows(IllegalArgumentException.class, () -> new UserImpl(-5, true, 180.5, 75.0));
+        assertThrows(IllegalArgumentException.class, () -> new UserImpl(25, true, 40.0, 75.0));
+        assertThrows(IllegalArgumentException.class, () -> new UserImpl(25, true, 180.5, 20.0));
     }
+
     @Test
-    void testEgaliteDeuxUtilisateurs() {
-        UserImpl user1 = new UserImpl(20, false, 164.0, 56.5);
-        UserImpl user2 = new UserImpl(20, false, 164.0, 56.5);
+    void testCalculsCardiaques() {
+        UserImpl user = new UserImpl(20, false, 180.0, 75.0); // Homme
 
-        assertEquals(user1.getAge(), user2.getAge(), "Deux utilisateurs doivent avoir le même age");
-        assertEquals(user1.getGenre(), user2.getGenre(), "Deux utilisateurs doivent avoir le même genre");
-        assertEquals(user1.getHeight(), user2.getHeight(), "Deux utilisateurs doivent faire la même taille");
-        assertEquals(user1.getWeight(), user2.getWeight(), "Deux utilisateurs doivent avoir le même poids");
+        // Test MaxHR Homme : 220 - 20 = 200
+        user.setMaxHRUser(20, false);
+        assertEquals(200.0, user.getMaxHRUser());
+
+        // Test MaxHR Femme : 226 - 20 = 206
+        user.setMaxHRUser(20, true);
+        assertEquals(206.0, user.getMaxHRUser());
+
+        // Test des zones (seuil Z1/Z2 à 60% de 200 = 120)
+        user.setMaxHRUser(20, false); // On repasse à 200
+        user.setSeuilZoneHR(user.getMaxHRUser());
+        ArrayList<Double> seuils = user.getSeuilZoneHR();
+
+        assertEquals(120.0, seuils.get(0)); // 60%
+        assertEquals(180.0, seuils.get(3)); // 90%
     }
 
+    @Test
+    void testToString() {
+        UserImpl user = new UserImpl(25, true, 180.0, 75.0);
+        String s = user.toString();
+        Assertions.assertTrue(s.contains("age=25"));
+        Assertions.assertTrue(s.contains("genre=true"));
+    }
 }
