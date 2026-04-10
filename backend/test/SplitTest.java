@@ -16,7 +16,7 @@ class SplitTest {
     }
 
     @Test
-    void test(){
+    void testvaleursnegatives(){
         Split split1 = new Split(-1, 350, 148);
         assertFalse(split1.getKm()>0);
         Split split2 = new Split(1, -350, 148);
