@@ -4,10 +4,7 @@ import dto.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import exceptions.ActivityNotFoundException;
 import model.*;
@@ -17,18 +14,17 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
     private final Traitement traitement;
 
     /**
-     * Initialise le service analytique en utilisant l'instance partagée de l'utilisateur via {@link UserSession}
-     * Cela garantit que {@link Traitement} utilise le même {@link model.UserModel}
-     * que {@link StravaUserProfileServiceImpl}.
-     * Si l'utilisateur met à jour son profil depuis le frontend, les seuils de zones cardiaques recalculés
-     * sont automatiquement pris en compte lors des prochains appels analytiques.
+     * Instancie le service analytique en utilisant l'instance partagée de l'utilisateur via {@link UserSession}
+     * Cela garantit que {@link Traitement} utilise le même {@link model.UserModel} que {@link StravaUserProfileServiceImpl}.
+     * Si l'utilisateur met à jour son profil depuis le frontend, seuils de zones cardiaques recalculés et
+     * automatiquement pris en compte lors des prochains traitements.
      */
 
 
     public StravaAnalyticsServiceImpl() {
         this.activities = new ArrayList<>();
 
-        // Récupération de l'instance partagée — jamais de new UserImpl() ici
+        // Récupération de l'instance partagée en créant une instance
         UserModel user = UserSession.getInstance();
 
         this.traitement = new Traitement("../data/strava.csv", UserSession.getInstance());
@@ -61,6 +57,11 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
             }
         }
         return allActivitiesDto;
+    }
+
+    // Getter des activities pour pouvoir rajouter celle importé en fit
+    public List<ActivityModel> getActivities() {
+        return this.activities;
     }
 
     /**
@@ -134,10 +135,35 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
         ActivityModel activity = findActivityById(id);
         ActivityTypeDto sport = determineSport(activity);
         List<TimedValueDto> points = new ArrayList<>();
+
+        // Activité FIT — chercher dans computedMetrics avec la clé frontend
+        if (activity instanceof ActivityImpl) {
+            ActivityImpl impl = (ActivityImpl) activity;
+            if (impl.getComputedMetrics() != null) {
+
+                // Correspondance nom backend vers clé frontend
+                Map<String, String> keyMap = new HashMap<>();
+                keyMap.put("HeartRate", "heart-rate");
+                keyMap.put("Speed", "speed");
+                keyMap.put("Altitude", "altitude");
+                keyMap.put("Power", "power");
+                keyMap.put("Cadence", "cadence");
+                keyMap.put("GroundTime", "ground-time");
+
+                String fitKey = keyMap.getOrDefault(metricName, metricName);
+
+                if (impl.getComputedMetrics().containsKey(fitKey)) {
+                    points = impl.getComputedMetrics().get(fitKey);
+                    return new MetricDto(sport, metricName, points);
+                }
+            }
+        }
+
+        // Activité CSV — lecture depuis Traitement comme avant
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         Map<LocalDateTime, Number> rawData = this.traitement.getMetricList(activity.getId(), metricName);
         Map<LocalDateTime, Number> sortedData = new TreeMap<>(rawData);
-        for (Map.Entry<LocalDateTime, Number> entry : sortedData.entrySet()){
+        for (Map.Entry<LocalDateTime, Number> entry : sortedData.entrySet()) {
             String timeText = formatter.format(entry.getKey());
             points.add(new TimedValueDto(timeText, entry.getValue()));
         }
@@ -234,7 +260,7 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
      */
     @Override
     public ZoneDto getMetricsZone(String id) {
-        // Profil non renseigné → zones vides
+        // Profil non renseigné = zonesHR vides
         UserModel user = UserSession.getInstance();
         if (user == null || user.getSeuilZoneHR() == null) {
             return new ZoneDto(new int[]{0, 0, 0, 0, 0});
@@ -247,25 +273,53 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
         for (ActivityModel activity : this.activities) {
             if (activity != null && id.equals(activity.getId())) {
 
-                ArrayList<Integer> rawZones = this.traitement.getTimeInZones(id);
-
-                // Calcul du total pour convertir en pourcentages
-                int total = 0;
-                for (int z : rawZones) {
-                    total += z;
+                // Activité FIT — calcul depuis computedMetrics //TODO moche comme tout de faire ça à bouger dans traitement
+                if (activity instanceof ActivityImpl) {
+                    ActivityImpl impl = (ActivityImpl) activity;
+                    if (impl.getComputedMetrics() != null
+                            && impl.getComputedMetrics().containsKey("heart-rate")) {
+                        List<TimedValueDto> hrPoints = impl.getComputedMetrics().get("heart-rate");
+                        ArrayList<Double> seuils = user.getSeuilZoneHR();
+                        int zt1 = 0, zt2 = 0, zt3 = 0, zt4 = 0, zt5 = 0;
+                        for (TimedValueDto point : hrPoints) {
+                            if (point.getValue() == null) continue;
+                            double hr = point.getValue().doubleValue();
+                            if      (hr < seuils.get(0)) zt1++;
+                            else if (hr < seuils.get(1)) zt2++;
+                            else if (hr < seuils.get(2)) zt3++;
+                            else if (hr < seuils.get(3)) zt4++;
+                            else                          zt5++;
+                        }
+                        int total = zt1 + zt2 + zt3 + zt4 + zt5;
+                        if (total == 0) return new ZoneDto(new int[]{0, 0, 0, 0, 0});
+                        return new ZoneDto(new int[]{
+                                (int) Math.round(zt1 * 100.0 / total),
+                                (int) Math.round(zt2 * 100.0 / total),
+                                (int) Math.round(zt3 * 100.0 / total),
+                                (int) Math.round(zt4 * 100.0 / total),
+                                (int) Math.round(zt5 * 100.0 / total)
+                        });
+                    }
                 }
 
-                // Conversion en pourcentages
+                // Activité CSV
+                ArrayList<Integer> rawZones = this.traitement.getTimeInZones(id);
+                if (rawZones == null) return new ZoneDto(new int[]{0, 0, 0, 0, 0});
+                int total = 0;
+                for (int z : rawZones) total += z;
                 int[] percentages = new int[rawZones.size()];
                 if (total > 0) {
                     for (int i = 0; i < rawZones.size(); i++) {
                         percentages[i] = (int) Math.round((rawZones.get(i) * 100.0) / total);
                     }
                 }
-
                 return new ZoneDto(percentages);
             }
         }
         return null;
+    }
+
+    public Traitement getTraitement() {
+        return this.traitement;
     }
 }

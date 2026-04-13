@@ -325,7 +325,7 @@ public class Traitement {
      * @param id L'identifiant unique de l'activité
      * @return Une liste d'objets Split contenant les statistiques de chaque kilomètre
      */
-    private List<Split> getSplits(String id) {
+    public List<Split> getSplits(String id) {
 
         List<Split> splits = new ArrayList<>();
 
@@ -426,6 +426,7 @@ public class Traitement {
             // On retourne 0.0 si la liste est vide
             return null;
         }
+
 
         // On créer des durations par zones
         int zt1 = 0, zt2 = 0, zt3 = 0, zt4 = 0, zt5 = 0;

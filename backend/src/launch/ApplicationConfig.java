@@ -24,9 +24,13 @@ public class ApplicationConfig {
         // UserSession reste null jusqu'à ce que l'utilisateur renseigne son profil
         UserSession.setInstance(new UserImpl()); // UserImpl vide, tous les champs à 0/false
 
-        this.analyticsService = new StravaAnalyticsServiceImpl();
         this.userProfileService = new StravaUserProfileServiceImpl();
-        this.enhancedAnalyticsService = new EnhancedAnalyticsServiceImpl();
+
+        StravaAnalyticsServiceImpl analyticsImpl = new StravaAnalyticsServiceImpl();
+        this.analyticsService = analyticsImpl;
+
+        this.importService = new ImportServiceImpl(analyticsImpl.getActivities(), analyticsImpl.getTraitement());
+
     }
 
     public static ApplicationConfig getConfiguration() {

@@ -1,5 +1,7 @@
 package model;
 import java.util.List;
+import java.util.Map;
+import dto.TimedValueDto;
 
 public class ActivityImpl implements ActivityModel{
     private String id;
@@ -151,6 +153,10 @@ public class ActivityImpl implements ActivityModel{
         this.splits = splits;
 
     }
+
+    private Map<String, List<TimedValueDto>> computedMetrics;
+    public Map<String, List<TimedValueDto>> getComputedMetrics() { return computedMetrics; }
+    public void setComputedMetrics(Map<String, List<TimedValueDto>> m) { this.computedMetrics = m; }
 
     @Override
     public String toString() {
