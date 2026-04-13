@@ -17,6 +17,16 @@ public class UserImpl implements UserModel{
     }
 
     public UserImpl(int age, boolean genre, double height, double weight) {
+        if (age < 0 || age > 120) {
+            throw new IllegalArgumentException("L'âge doit être entre 0 et 120 ans.");
+        }
+        if (height < 70.0 || height > 250.0) {
+            throw new IllegalArgumentException("La taille doit être entre 70 et 250 cm.");
+        }
+        if (weight < 30.0 || weight > 250.0) {
+            throw new IllegalArgumentException("Le poids doit être entre 30 et 250 kg.");
+        }
+
         this.age = age;
         this.genre = genre;
         this.height = height;

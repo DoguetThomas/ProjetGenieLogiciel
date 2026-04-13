@@ -4,7 +4,6 @@ import model.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-
 import java.util.*;
 
 import model.Split;
@@ -16,6 +15,13 @@ public class Traitement {
 
     public Traitement(String filePath, UserModel user) {
         this.records = StravaCsvReader.readCsv(filePath);
+        this.sortedRecords = this.RecordSorter();
+        this.user = user;
+    }
+
+    // Nouveau constructeur uniquement pour les tests
+    public Traitement(List<StravaRecord> records, UserModel user) {
+        this.records = records;
         this.sortedRecords = this.RecordSorter();
         this.user = user;
     }
@@ -68,7 +74,7 @@ public class Traitement {
         Double avgSpeed = this.getAvgSpeed(id);
 
         // Si la vitesse n'est pas calculable
-        if (avgSpeed.isNaN()) {
+        if (avgSpeed.isNaN() || avgSpeed == 0.0) {
             return "Inconnu";
         }
 
