@@ -28,7 +28,6 @@ public class ActivityImpl implements ActivityModel{
         this.zoneHR = zoneHR;
         this.route = route;
         this.splits = splits;
-
     }
 
     public ActivityImpl() {
@@ -109,7 +108,7 @@ public class ActivityImpl implements ActivityModel{
     }
 
     @Override
-    public void setMaxHR(Double maxHR) {
+    public void setMaxHR(double maxHR) {
         this.maxHR = maxHR;
     }
 

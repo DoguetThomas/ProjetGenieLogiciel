@@ -1,21 +1,28 @@
 package services;
 
+import dto.ElevationDto;
+import dto.VerticalRatioDto;
+
 public interface EnhancedAnalyticsService {
 
     /**
-     * Get the altitude gain for bike activities (only)
+     * Retourne le dénivelé positif total pour une activité vélo.
+     * Encapsulé dans un {@link ElevationDto} pour que le controller
+     * puisse le sérialiser en JSON sans transformation supplémentaire.
      *
-     * @param activityId the activity identifier
-     * @return the value as double
+     * @param activityId l'identifiant de l'activité
+     * @return un {@link ElevationDto} contenant {@code totalAscent} en mètres
      */
-    double getElevationGain(String activityId);
+    ElevationDto getElevationGain(String activityId);
 
     /**
-     * Get the running form score based on the
-     * https://www.garmin.com/fr-FR/garmin-technology/running-science/running-dynamics/hill-score/
-     * @param activityId the activity identifier
-     * @return the value as double
+     * Retourne le rapport vertical moyen pour une activité course.
+     * Basé sur : https://www.garmin.com/fr-FR/garmin-technology/running-science/running-dynamics/hill-score/
+     * Encapsulé dans un {@link VerticalRatioDto} pour que le controller
+     * puisse le sérialiser en JSON sans transformation supplémentaire.
+     *
+     * @param activityId l'identifiant de l'activité
+     * @return un {@link VerticalRatioDto} contenant {@code verticalRatio} en pourcentage
      */
-    double getVerticalRatio(String activityId);
-
+    VerticalRatioDto getVerticalRatio(String activityId);
 }

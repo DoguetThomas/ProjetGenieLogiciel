@@ -63,7 +63,7 @@ public class Traitement {
      * @param id L'identifiant de la séance.
      * @return "Vélo", "Course à pied", ou "Inconnu" si la vitesse ne peut pas être calculée.
      */
-    private String determineSportType(String id) {
+    public String determineSportType(String id) {
         // On récupère la vitesse moyenne grâce à la méthode AvgSpeed
         Double avgSpeed = this.getAvgSpeed(id);
 
@@ -209,10 +209,10 @@ public class Traitement {
         double speed = this.getAvgSpeed(id);
         // éviter la division par 0
         if (distanceKm <= 0) {
-            return 0.0;
+            return null;
         }
 
-        return (duration/60) / distanceKm;
+        return (duration/60.0) / distanceKm;
     }
 
     /**
@@ -223,14 +223,14 @@ public class Traitement {
      */
     private Double getAvgHR(String id) {
         if (this.sortedRecords == null) {
-            return 0.0;
+            return null;
         }
         // On récupère la liste des points Cardio pour l'activité ciblée par l'ID
         List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
 
         if (recordsForActivity.isEmpty()) {
             // On retourne 0.0 si la liste est vide
-            return 0.0;
+            return null;
         }
         // On crée une variable pour stocker la somme de toutes les FC et un compteur pour
         // combien de points on additionne
@@ -247,10 +247,7 @@ public class Traitement {
             }
         }
         // Pour éviter la divison par 0
-        if (count == 0) {
-            return 0.0;
-        }
-        return totalHR / count;
+        return count > 0 ? totalHR / count : 0.0;
     }
 
     /**
@@ -316,10 +313,8 @@ public class Traitement {
             }
         }
         // Pour éviter la divison par 0
-        if (count == 0) {
-            return 0.0;
-        }
-        return totalPower / count;
+
+        return count > 0 ? totalPower / count : 0.0;
     }
 
 
@@ -571,7 +566,7 @@ public class Traitement {
         List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
 
         for (StravaRecord record : recordsForActivity) {
-            Number pointsMetric = 0;
+            Number pointsMetric = null;
             if (Objects.equals(metric, "Altitude")){
                 pointsMetric = record.getEnhancedAltitude();
             }
@@ -591,11 +586,21 @@ public class Traitement {
                 pointsMetric = record.getGroundTime();
             }
 
-            res.put(record.getTimestamp(), pointsMetric);
+            // Ne pas ajouter si la valeur est absente pour cette activité
+            if (pointsMetric != null) {
+                res.put(record.getTimestamp(), pointsMetric);
+            }
         }
         return res;
     }
 
+    public List<StravaRecord> getRecords() {
+        return records;
+    }
+
+    public Map<String, List<StravaRecord>> getSortedRecords() {
+        return sortedRecords;
+    }
 }
 
 
