@@ -122,4 +122,5 @@ public interface ActivityModel {
     public List<Split> getSplits();
 
     public List<GpsPoint> getRoute();
+
 }

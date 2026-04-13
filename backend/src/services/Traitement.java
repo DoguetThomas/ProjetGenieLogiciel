@@ -63,7 +63,7 @@ public class Traitement {
      * @param id L'identifiant de la séance.
      * @return "Vélo", "Course à pied", ou "Inconnu" si la vitesse ne peut pas être calculée.
      */
-    private String determineSportType(String id) {
+    public String determineSportType(String id) {
         // On récupère la vitesse moyenne grâce à la méthode AvgSpeed
         Double avgSpeed = this.getAvgSpeed(id);
 
@@ -593,6 +593,13 @@ public class Traitement {
         return res;
     }
 
+    public List<StravaRecord> getRecords() {
+        return records;
+    }
+
+    public Map<String, List<StravaRecord>> getSortedRecords() {
+        return sortedRecords;
+    }
 }
 
 

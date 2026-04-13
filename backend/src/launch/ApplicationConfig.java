@@ -22,6 +22,7 @@ public class ApplicationConfig {
     private ApplicationConfig() {
         this.analyticsService = new StravaAnalyticsServiceImpl();
         this.userProfileService = new StravaUserProfileServiceImpl();
+        this.enhancedAnalyticsService = new EnhancedAnalyticsServiceImpl();
     }
 
     public static ApplicationConfig getConfiguration() {

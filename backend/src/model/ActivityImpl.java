@@ -28,7 +28,6 @@ public class ActivityImpl implements ActivityModel{
         this.zoneHR = zoneHR;
         this.route = route;
         this.splits = splits;
-
     }
 
     public ActivityImpl() {
