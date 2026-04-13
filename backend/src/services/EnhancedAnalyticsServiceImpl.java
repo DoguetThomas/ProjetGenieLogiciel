@@ -9,9 +9,9 @@ import java.util.Map;
 public class EnhancedAnalyticsServiceImpl implements EnhancedAnalyticsService{
     private Traitement traitement;
     private Map<String, List<StravaRecord>> records;
-    public EnhancedAnalyticsServiceImpl(){
-        UserModel user = UserSession.getInstance();
 
+    public EnhancedAnalyticsServiceImpl() {
+        UserModel user = UserSession.getInstance();
         this.traitement = new Traitement("../data/strava.csv", user);
         this.records = this.traitement.getSortedRecords();
     }
@@ -49,31 +49,26 @@ public class EnhancedAnalyticsServiceImpl implements EnhancedAnalyticsService{
     public double getVerticalRatio(String id) {
 
         if (!"RUN".equals(this.traitement.determineSportType(id))) {
-            System.out.println("1");
             return 0.0; // Retourne 0 si ce n'est pas de la course
         }
 
         if (records == null || !records.containsKey(id)) {
-            System.out.println("2");
             return 0.0;
         }
         List<StravaRecord> recordsForActivity = this.records.get(id);
 
         if (recordsForActivity == null || recordsForActivity.isEmpty()) {
-            System.out.println("3");
             return 0.0;
         }
 
         double totalRatio = 0.0;
         int count = 0;
-        System.out.println(records);
         for (StravaRecord record : recordsForActivity) {
             Double speed = record.getEnhancedSpeed();
             // Vitesse (pour estimer la foulée)
             Double cadence = record.getCadence();
             // Donnée biomécanique 1
             Double verticalOscillation = record.getVerticalOscillation(); // Donnée biomécanique 2
-            System.out.println(verticalOscillation);
             Double groundTime = record.getGroundTime();           // Donnée biomécanique 3
 
             // Ajout uniquement de la vérification pour éviter le NullPointerException et la division par zéro

@@ -209,7 +209,7 @@ public class Traitement {
         double speed = this.getAvgSpeed(id);
         // éviter la division par 0
         if (distanceKm <= 0) {
-            return 0.0;
+            return null;
         }
 
         return (duration/60.0) / distanceKm;
@@ -223,14 +223,14 @@ public class Traitement {
      */
     private Double getAvgHR(String id) {
         if (this.sortedRecords == null) {
-            return 0.0;
+            return null;
         }
         // On récupère la liste des points Cardio pour l'activité ciblée par l'ID
         List<StravaRecord> recordsForActivity = this.sortedRecords.get(id);
 
         if (recordsForActivity.isEmpty()) {
             // On retourne 0.0 si la liste est vide
-            return 0.0;
+            return null;
         }
         // On crée une variable pour stocker la somme de toutes les FC et un compteur pour
         // combien de points on additionne

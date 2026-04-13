@@ -89,7 +89,7 @@ public class StravaAnalyticsServiceImpl implements AnalyticsService {
         ActivityTypeDto sport = determineSport(activity);
         double distanceKm = (activity.getDistance() != null) ? activity.getDistance() : 0.0;
         int maxHrInt = (activity.getMaxHR() != null) ? activity.getMaxHR().intValue() : 0;
-        double avgHr = (activity.getAvgHR() != null) ? activity.getAvgHR() : 0.0;
+        double avgHr = (activity.getAvgHR() != null) ? activity.getAvgHR() : null;
         double avgSpeed = (activity.getAvgSpeed() != null) ? activity.getAvgSpeed() : 0.0;
         double avgPace = (activity.getAvgPace() != null) ? activity.getAvgPace() : 0.0;
         double avgPower = (activity.getAvgPower() != null) ? activity.getAvgPower() : 0.0;
