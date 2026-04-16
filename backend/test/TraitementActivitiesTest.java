@@ -74,4 +74,6 @@ public class TraitementActivitiesTest {
 
         assertTrue(activities.isEmpty(), "La liste doit être vide si aucun record n'est fourni");
     }
+
+
 }

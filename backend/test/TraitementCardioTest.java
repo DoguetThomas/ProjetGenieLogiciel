@@ -61,4 +61,5 @@ public class TraitementCardioTest {
         assertEquals(0, zones.get(3), "0 point en Z4");
         assertEquals(0, zones.get(4), "0 point en Z5");
     }
+
 }

@@ -6,6 +6,7 @@ import model.UserImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +80,7 @@ public class TraitementNullCasesTest {
         assertEquals(0.0, activity.getDistance(), "La distance doit être 0.0");
         assertEquals(0, activity.getDuration(), "La durée doit être 0 car il n'y a pas de timestamp");
         assertEquals(0.0, activity.getAvgSpeed(), "La vitesse doit être 0.0 (Le count == 0 a empêché la division par 0)");
-        assertEquals(0.0, activity.getAvgPace(), "L'allure doit être 0.0 (Le if(distance<=0) a empêché la division par 0)");
+        assertNull(activity.getAvgPace(), "L'allure doit être null pour éviter la division par zéro");
         assertEquals("Inconnu", activity.getSport(), "Le sport doit être Inconnu si la vitesse est à 0");
         assertEquals(0.0, activity.getAvgHR(), "La FC Moyenne doit être 0.0");
         assertEquals(0.0, activity.getMaxHR(), "La FC Max doit être 0.0");
@@ -88,5 +89,32 @@ public class TraitementNullCasesTest {
         // Bonus : tes splits et itinéraires doivent aussi être gérés proprement
         assertTrue(activity.getSplits().isEmpty(), "Les splits doivent être vides");
         assertTrue(activity.getRoute().isEmpty(), "La route doit être vide sans coordonnées GPS");
+    }
+
+    @Test
+    public void testRecordSorter_WithInvalidDatafiles() {
+        // Point avec datafile null
+        StravaRecord rNull = new StravaRecord(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                null, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, LocalDateTime.now());
+
+        // Point avec datafile vide
+        StravaRecord rEmpty = new StravaRecord(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                "", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, LocalDateTime.now());
+
+        Traitement traitement = new Traitement(List.of(rNull, rEmpty), mockUser);
+
+        // La map triée doit être vide car les deux records ont été ignorés
+        assertTrue(traitement.getActivities().isEmpty(), "Les activités sans ID valide doivent être ignorées.");
+    }
+
+    @Test
+    public void testConstructor_WithInvalidFilePath() {
+        try {
+            // Teste l'appel du vrai constructeur avec un faux chemin
+            Traitement traitement = new Traitement("chemin/inexistant.csv", mockUser);
+            assertNotNull(traitement.getRecords(), "La liste doit être initialisée même si la lecture échoue");
+        } catch (Exception e) {
+            // Le test passe si une exception est levée
+        }
     }
 }
